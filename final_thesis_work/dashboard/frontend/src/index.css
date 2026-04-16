@@ -1,0 +1,217 @@
+/* Bloomberg Terminal Aesthetic */
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap');
+
+:root {
+  --term-bg: #000000;
+  --term-panel: #050505;
+  --term-amber: #FFB000;
+  --term-cyan: #00E5FF;
+  --term-green: #00FF00;
+  --term-red: #FF0033;
+  --term-dim: #555555;
+  --term-border: #333333;
+  --font-mono: 'Fira Code', 'Courier New', Courier, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--term-bg);
+  color: var(--term-amber);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow: hidden;
+  -webkit-font-smoothing: none;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--term-cyan);
+}
+
+.terminal-header {
+  border-bottom: 2px solid var(--term-cyan);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--term-panel);
+}
+
+.terminal-header h1 {
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 20px;
+}
+
+.toolbar button {
+  background: none;
+  border: 1px solid var(--term-dim);
+  color: var(--term-amber);
+  padding: 5px 15px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.toolbar button.active {
+  border-color: var(--term-cyan);
+  color: var(--term-cyan);
+  box-shadow: 0 0 5px rgba(0, 229, 255, 0.3);
+}
+
+.toolbar button:hover {
+  background-color: rgba(255, 176, 0, 0.1);
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 300px;
+  border-right: 2px solid var(--term-border);
+  padding: 20px;
+  background: var(--term-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.control-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-block label {
+  color: var(--term-cyan);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.term-input {
+  background: #000;
+  border: 1px solid var(--term-dim);
+  color: var(--term-amber);
+  padding: 8px;
+  font-family: var(--font-mono);
+}
+
+.term-input:focus {
+  outline: none;
+  border-color: var(--term-amber);
+}
+
+.term-btn-exec {
+  background: var(--term-amber);
+  color: #000;
+  border: none;
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.term-btn-exec:hover {
+  background: #FFC033;
+}
+
+.content-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--term-bg);
+}
+
+/* Tab Content Areas */
+.tab-content {
+  display: none;
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.tab-content.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chart */
+#chart-canvas {
+  flex: 1;
+  width: 100%;
+}
+
+/* Stat Grid */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.stat-box {
+  border: 1px solid var(--term-border);
+  padding: 15px;
+  background: var(--term-panel);
+}
+
+.stat-box h3 {
+  font-size: 12px;
+  color: var(--term-dim);
+  margin-bottom: 10px;
+}
+
+.stat-val {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.stat-val.good { color: var(--term-green); }
+.stat-val.bad { color: var(--term-red); }
+
+/* Raw Output Console */
+.console-output {
+  background: #000;
+  border: 1px solid var(--term-border);
+  padding: 15px;
+  font-size: 11px;
+  white-space: pre-wrap;
+  color: var(--term-amber);
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Definitions */
+.def-block {
+  border-bottom: 1px solid var(--term-border);
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.def-block p {
+  color: #CCC;
+  margin-top: 8px;
+}

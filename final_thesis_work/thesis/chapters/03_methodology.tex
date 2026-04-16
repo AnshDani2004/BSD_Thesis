@@ -1,0 +1,34 @@
+\chapter{Methodology}
+\label{ch:methodology}
+
+Our simulation framework models a stylized market environment in which agents repeatedly allocate resources. This approach allows us to computationally test theoretical trade-offs under rigorous, repeatable conditions.
+
+\section{The Stylized Market Environment}
+We simulate environments where payoffs are governed by hidden, potentially changing parameters. The environment evaluates continuous betting fractions, returning noisy feedback at each time step. We control the level of uncertainty by manipulating the mean $\mu$ and standard deviation $\sigma$ of the payoff distribution $\Normal(\mu, \sigma^2)$.
+
+\section{Decision Agents}
+We implement several agents matching the frameworks defined in Chapter~\ref{ch:foundations}:
+\begin{enumerate}
+    \item \textbf{Kelly Oracle}: An omniscient baseline that knows the true parameters. Represents optimal exploitation.
+    \item \textbf{Naive Bayes Kelly}: Uses the posterior mean directly, suffering from early-stage overconfidence.
+    \item \textbf{UCB Agent}: Explicitly calculates an upper confidence bound to enforce exploration.
+    \item \textbf{Thompson Kelly Agent}: Samples the underlying payoff parameter from a Bayesian posterior, dynamically scaling bet size based on epistemic uncertainty.
+    \item \textbf{Vol-Augmented HMM (Proposed)}: A multi-modal regime detector utilizing 2D observations (returns and rolling volatility) with CUSUM change-point triggers to detect regime shifts within $T < 2$ steps.
+    \item \textbf{Risk-Constrained CPPI (Proposed)}: A non-probabilistic safety layer that enforces a trailing maximum drawdown floor $D_{max}$ by dynamically resizing exposure.
+\end{enumerate}
+
+\section{Market Friction \& Transaction Costs}
+To bridge the gap between theoretical growth and empirical deployment, we model transaction costs $C_t$ at each step. Given a betting fraction $f_t$ and an adjusted previous fraction $\hat{f}_{t-1}$, the friction $c$ is applied to the turnover $\mathcal{T}_t$:
+\begin{equation}
+    W_{t+1} = W_t \cdot (1 + f_t r_t - c \cdot |f_t - \hat{f}_{t-1}|)
+\end{equation}
+where $\hat{f}_{t-1}$ represents the effective weight after the price move $r_t$ but before rebalancing. This enforces a penalty on "chattering" algorithms that trade excessively on noise.
+
+\section{Evaluation Metrics}
+Strategies are evaluated against multiple contrasting objectives:
+\begin{itemize}
+    \item \textbf{Expected Cumulative Wealth}: Measured via log-space arithmetic to maintain numerical stability across multi-year horizons.
+    \item \textbf{Risk of Ruin}: The empirical frequency of the path hitting the boundary $W_t \leq \epsilon$.
+    \item \textbf{Annualized Sharpe Ratio ($\mathcal{S}$)}: Excess return per unit of total risk, defined as $\frac{E[R]}{\sigma(R)} \times \sqrt{252}$.
+    \item \textbf{Annualized Sortino Ratio ($\mathcal{SOR}$)}: Excess return per unit of downside risk, defined as $\frac{E[R]}{\sigma_{downside}(R)} \times \sqrt{252}$.
+\end{itemize}

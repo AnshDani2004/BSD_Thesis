@@ -1,0 +1,39 @@
+{
+    "metadata": {
+        "experiment": "Drift",
+        "t_steps": 250,
+        "n_sims": 100
+    },
+    "agents": {
+        "Vol-HMM (Proposed)": {
+            "median_wealth": 3.4987686040944794,
+            "ruin_risk": 0.0,
+            "max_wealth": 48.77993443891646
+        },
+        "Risk-Constrained CPPI": {
+            "median_wealth": 2.007089161763368,
+            "ruin_risk": 0.0,
+            "max_wealth": 9.876929165313978
+        },
+        "Thompson Sampling": {
+            "median_wealth": 3.600257890714626,
+            "ruin_risk": 0.0,
+            "max_wealth": 95.8468030166707
+        },
+        "EXP3": {
+            "median_wealth": 3.286864489613299,
+            "ruin_risk": 0.0,
+            "max_wealth": 76.93525697515778
+        },
+        "Naive Bayes": {
+            "median_wealth": 3.673652750843964,
+            "ruin_risk": 0.0,
+            "max_wealth": 73.93186394604504
+        },
+        "Softmax": {
+            "median_wealth": 4.340437590410136,
+            "ruin_risk": 0.0,
+            "max_wealth": 113.28585862892197
+        }
+    }
+}

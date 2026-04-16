@@ -1,0 +1,24 @@
+\chapter{Theoretical Foundations}
+\label{ch:foundations}
+
+This chapter details the mathematical frameworks underlying sequential decision-making in uncertain environments. We review the core principles of Bayesian statistics, the definition of optimal bet sizing, and the exploration-exploitation trade-off.
+
+\section{Sequential Resource Allocation}
+We define a probability space $(\Omega, \Filt, \Prob)$ equipped with a filtration $\Filt = \{\Filt_t\}$, where $\Filt_t = \sigma(r_1, \dots, r_t)$ represents the history of observed payoffs up to time $t$. An agent must allocate resources (fractions of wealth) $f_t \in \Filt_{t-1}$ across uncertain options.
+
+\section{The Kelly Criterion}
+The Kelly Criterion determines the optimal fraction of wealth to risk to maximize expected logarithmic growth:
+\begin{equation}
+    f^* = \frac{bp - q}{b}
+\end{equation}
+While asymptotically optimal as $T \to \infty$, Kelly fractions can lead to severe drawdowns over limited horizons.
+
+\section{Bayesian Updating and Posterior Beliefs}
+In uncertain environments, the true probability of success $p$ is unknown. Agents maintain a prior belief, historically modeled via a Beta distribution $\text{Beta}(\alpha, \beta)$, and apply Bayes' theorem to compute a posterior distribution upon observing outcomes.
+
+\section{Multi-Armed Bandits}
+The Multi-Armed Bandit (MAB) problem formally models the dilemma of allocating resources among competing actions with unknown outcomes.
+\subsection{Upper Confidence Bound (UCB)}
+UCB algorithms rely on the principle of optimism in the face of uncertainty, establishing explicit bounds to manage exploration.
+\subsection{Thompson Sampling}
+Thompson Sampling is a Bayesian heuristic that implicitly balances exploration and exploitation by sampling directly from the posterior distribution.

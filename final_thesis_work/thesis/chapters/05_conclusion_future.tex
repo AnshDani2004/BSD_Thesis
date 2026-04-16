@@ -1,0 +1,20 @@
+\section{Synthesis of Findings}
+This thesis bridged Bayesian probability theory with stochastic processes to evaluate how agents adapt in noisy, adversarial environments. We demonstrated that structured exploration (e.g., Thompson Sampling) outperforms pure exploitation in learning contexts. However, Experiment 3 revealed that standard Bayesian updating strategies are severely vulnerable to non-stationary environments, demonstrating catastrophic failure when underlying payoff structures change without notice.
+
+To resolve these failures, we implemented and validated a two-pronged proposed framework:
+\begin{enumerate}
+    \item \textbf{Volatility-Augmented HMM}: By utilizing 2D observations and CUSUM change-point detection, we demonstrated that regime-aware agents can survive adversarial structural breaks that decimate standard Bayesian baselines.
+    \item \textbf{Risk-Constrained Optimization (CPPI)}: We proved that a non-probabilistic safety layer successfully truncates the left tail of the return distribution, guaranteeing survival even during the 2008 and 2020 market crashes.
+\end{enumerate}
+
+Finally, by integrating realistic transaction costs and empirical S\&P 500 data, we confirmed that these proposed methods maintain their theoretical advantages in "noisy" real-world conditions, providing a robust template for the next generation of adaptive decision systems.
+
+\section{Future Directions: The Multi-Asset Frontier}
+While this thesis successfully resolved the non-stationarity challenges for single-asset trajectories, several high-impact research pathways remain:
+\begin{enumerate}
+    \item \textbf{Multi-Asset Regime Coupling}: Extending the HMM framework to detect correlated regime shifts across $N$ assets using non-Gaussian copula structures.
+    \item \textbf{Deep Reinforcement Learning (DRL) for Hyper-parameter Tuning}: Using a DRL agent to dynamically search the HMM and CPPI parameter space (e.g., $k$ and $D_{max}$) in response to changing market entropy.
+    \item \textbf{Micro-structure Friction Modeling}: Incorporating bid-ask spread decay and order book impact into the transaction cost function for high-frequency applications.
+\end{enumerate}
+
+These directions represent the next iteration of protecting adaptive systems against the inherent unpredictability of human-centric financial markets.

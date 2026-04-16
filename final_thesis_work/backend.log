@@ -1,0 +1,29 @@
+Starting Thesis Simulation API on port 5001...
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 112-965-402
+127.0.0.1 - - [15/Apr/2026 20:37:31] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:03] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:04] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:12] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:13] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:41] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:42] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:53] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:53] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:58] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:40:59] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:41:09] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:41:09] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:41:14] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:41:42] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:41:43] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:44:50] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:44:52] "POST /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:54:27] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 20:54:28] "POST /api/simulate/compare HTTP/1.1" 200 -

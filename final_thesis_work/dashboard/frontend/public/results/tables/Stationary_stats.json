@@ -1,0 +1,39 @@
+{
+    "metadata": {
+        "experiment": "Stationary",
+        "t_steps": 250,
+        "n_sims": 100
+    },
+    "agents": {
+        "Vol-HMM (Proposed)": {
+            "median_wealth": 3019.6824634642535,
+            "ruin_risk": 0.0,
+            "max_wealth": 152469.49032117354
+        },
+        "Risk-Constrained CPPI": {
+            "median_wealth": 34.91886411055874,
+            "ruin_risk": 0.0,
+            "max_wealth": 1447.4743643335025
+        },
+        "Thompson Sampling": {
+            "median_wealth": 1012.0048783383924,
+            "ruin_risk": 0.0,
+            "max_wealth": 1038291.8165092589
+        },
+        "EXP3": {
+            "median_wealth": 7944.9436186313915,
+            "ruin_risk": 0.0,
+            "max_wealth": 189655.3526680256
+        },
+        "Naive Bayes": {
+            "median_wealth": 909.5071926922119,
+            "ruin_risk": 0.0,
+            "max_wealth": 1139905.474004647
+        },
+        "Softmax": {
+            "median_wealth": 1257.3141049221754,
+            "ruin_risk": 0.0,
+            "max_wealth": 2111300.225970785
+        }
+    }
+}

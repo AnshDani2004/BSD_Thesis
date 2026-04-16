@@ -1,0 +1,22 @@
+\appendix
+\chapter{Code-to-Methodology Verification}
+
+To ensure complete computational transparency, the mathematical constructs defined in Chapters 2 through 4 are mapped directly to their execution scope within the central Python architecture. 
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{p{0.3\textwidth} p{0.35\textwidth} p{0.3\textwidth}}
+\hline
+\textbf{Theoretical Construct} & \textbf{Equation Form} & \textbf{Repository Class / Func} \\ \hline
+Bayesian Posterior Map & $\alpha_t = \alpha_{t-1} + y_t$ & \texttt{ThompsonKellyAgent.update()} \\
+Kelly Oracle Bound & $f^* = \mu / \sigma^2$ & \texttt{compute\_kelly\_fraction()} \\
+Vol-HMM Log-Likelihood & $\ln \alpha_t(j) = \ln b_j + \log\sum \dots$ & \texttt{VolAugmentedHMM.update()} \\
+CPPI Safety Floor & $\lambda_t = \min(1, m \cdot c_t / W_t)$ & \texttt{RiskConstrainedKelly.act()} \\
+Drawdown Metric & $D_t = 1 - W_t / \max(W_{<t})$ & \texttt{WealthTracker} \\
+EXP3 Regret Bound & $p_{i,t} = (1-\gamma) \frac{w_i}{\sum w} + \frac{\gamma}{K}$ & \texttt{EXP3Agent.act()} \\
+\hline
+\end{tabular}
+\end{table}
+
+All random outcomes were synchronized utilizing Common Random Numbers (CRN) in \texttt{distributions.py} to securely bound Monte Carlo comparisons free of idiosyncratic noise loops.
