@@ -15,8 +15,16 @@
       "destination": "https://honorsthesis-hbnw.onrender.com/api/$1"
     },
     {
+      "source": "/assets/(.*)",
+      "destination": "/dashboard/frontend/assets/$1"
+    },
+    {
+      "source": "/results/(.*)",
+      "destination": "/dashboard/frontend/results/$1"
+    },
+    {
       "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "destination": "/dashboard/frontend/index.html"
     }
   ]
 }
