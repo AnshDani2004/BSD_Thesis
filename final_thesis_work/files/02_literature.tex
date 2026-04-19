@@ -1,0 +1,173 @@
+\chapter{Literature Review}
+\label{ch:literature}
+
+This chapter surveys the intellectual lineage that informs the three pillars
+of this thesis: optimal bet sizing under the Kelly Criterion, the
+exploration-exploitation trade-off in Multi-Armed Bandits, and
+risk-constrained portfolio management via CPPI.  We also situate our proposed
+contributions---the Volatility-Augmented HMM and the Risk-Constrained Kelly
+framework---within the existing literature.
+
+% ---------------------------------------------------------------
+\section{The Kelly Criterion: Origins and Controversy}
+% ---------------------------------------------------------------
+
+\subsection{Kelly (1956) and Asymptotic Growth Optimality}
+
+The Kelly Criterion originates in a 1956 paper by John L.\ Kelly Jr., a
+researcher at Bell Labs, who drew an analogy between information-theoretic
+channel capacity and optimal gambling strategies.  Kelly showed that an agent
+maximizing the expected growth rate of wealth should maximize $\E[\log W_T]$,
+and derived the closed-form fraction now bearing his name.  Breiman (1961)
+subsequently supplied the rigorous measure-theoretic proof of asymptotic
+dominance: any strategy that differs from Kelly on a set of positive measure
+is eventually dominated almost surely.  This result is stated formally as
+Theorem~\ref{thm:kelly_slln} in Chapter~\ref{ch:foundations}.
+
+\subsection{The Samuelson--Kelly Debate}
+
+Despite its theoretical appeal, Kelly betting has been criticized sharply,
+most famously by the Nobel laureate Paul Samuelson.  In a deliberately
+monosyllabic 1979 paper, Samuelson argued that maximizing $\E[\log W]$ is
+only justified if the investor's utility function is precisely logarithmic,
+and that investors with power utility $U(W) = W^\gamma/\gamma$ ($\gamma \neq 0$)
+should use \emph{fractional} Kelly strategies scaled by $\gamma$.
+
+Samuelson's critique centers on two related points.  First, Kelly betting can
+produce spectacular drawdowns over finite horizons even when the asymptotic
+growth rate is maximal.  The median wealth under full Kelly can be far below
+the expected wealth because the distribution of $W_T$ is log-normal with a
+heavy right tail: expected wealth is driven by rare high-growth paths, while
+the typical investor suffers significant downside.  Second, for an investor
+who retires at a fixed horizon $T$, maximizing long-run growth is not the same
+as maximizing the probability of reaching a target.  Thorp (1969, 1997) showed
+that half-Kelly betting maximizes this probability in many practical settings,
+even though it sacrifices asymptotic growth.
+
+The tension between Samuelson's critique and Kelly's optimality result
+motivates our fractional Kelly and CPPI experiments in
+Chapter~\ref{ch:experiments}.  We empirically quantify the ``cost of
+survival'': the foregone geometric growth rate when a drawdown floor is
+imposed.
+
+\subsection{Heavy Tails and the Kelly-Ruin Paradox}
+
+Classical Kelly theory assumes finite-variance returns.  Mandelbrot (1963) and
+Fama (1965) documented that equity returns exhibit leptokurtosis---heavier
+tails than the Gaussian.  For distributions in the domain of attraction of a
+stable law with tail index $\alpha < 2$, the variance is infinite and the Kelly
+fraction $f^* = \mu/\sigma^2$ computed from sample moments is systematically
+overestimated.  In the limit, a finite-sample Gaussian Kelly fraction applied
+to a Student-$t_3$ environment guarantees eventual ruin (Ziemba and Hausch,
+1986).  This is the \emph{Kelly-Ruin Paradox}: the formula designed to prevent
+ruin causes ruin when its Gaussian assumption is violated.  We reproduce and
+quantify this paradox in Experiment~6.
+
+% ---------------------------------------------------------------
+\section{Multi-Armed Bandits: Exploration vs.\ Exploitation}
+% ---------------------------------------------------------------
+
+\subsection{The Robbins Problem and the Lai--Robbins Lower Bound}
+
+The Multi-Armed Bandit problem was formalized by Robbins (1952) as a
+sequential statistical decision problem.  Lai and Robbins (1985) established
+the fundamental lower bound on regret: any consistent policy must suffer
+expected regret of at least $\Omega(\log T)$.  This bound was achieved
+constructively by UCB1 (Auer, Cesa-Bianchi, and Fischer, 2002), whose regret
+guarantee (Theorem~\ref{thm:ucb_regret}) is logarithmic and tight.
+
+\subsection{Thompson Sampling}
+
+Thompson (1933) proposed probability matching---selecting actions with
+probability proportional to their posterior probability of being optimal---over
+eight decades before it was recognized as a competitive algorithm.  Rigorous
+analysis was provided by Agrawal and Goyal (2012) and Kaufmann, Korda, and
+Munos (2012), confirming asymptotic optimality (Theorem~\ref{thm:ts_regret}).
+
+The combination of Thompson Sampling with Kelly bet sizing used in this thesis
+is a novel contribution.  Standard bandit algorithms treat arm selection and
+resource allocation as separate problems; our formulation couples them so that
+Bayesian posterior uncertainty directly modulates the bet size, yielding an
+implicit risk-aversion mechanism without any explicit risk constraint.
+
+\subsection{Adversarial Bandits and EXP3}
+
+Auer, Cesa-Bianchi, Freund, and Schapire (2002b) introduced EXP3 for the
+adversarial bandit setting, where rewards may be chosen by an adversary with
+full knowledge of the agent's strategy.  The $O(\sqrt{T K \ln K})$ minimax
+regret bound of EXP3 (Theorem~\ref{thm:exp3_regret}) is qualitatively stronger
+than UCB in nonstationary settings because it makes no stationarity assumption
+whatsoever.  We use a fractional variant as a principled adversarial baseline,
+noting the deviation from canonical EXP3 in Remark~\ref{rem:exp3_variant}.
+
+% ---------------------------------------------------------------
+\section{Regime-Switching Models and Change-Point Detection}
+% ---------------------------------------------------------------
+
+\subsection{Hidden Markov Models in Finance}
+
+Hidden Markov Models were applied to financial time series by Hamilton (1989),
+who modeled GNP growth as a two-state Markov-switching process.  Ang and
+Bekaert (2002) and Guidolin and Timmermann (2007) subsequently documented that
+equity returns are well described by regime-switching models with distinct bull
+and bear states.  The parameters for our simulation environments
+($\mu_{\text{bull}} = 0.08$, $\sigma_{\text{bull}} = 0.15$;
+$\mu_{\text{bear}} = -0.10$, $\sigma_{\text{bear}} = 0.30$) are calibrated to
+these empirical estimates.
+
+\subsection{CUSUM Change-Point Detection}
+
+Page (1954) introduced the Cumulative Sum (CUSUM) procedure for sequential
+change-point detection.  Lorden (1971) established the minimax optimality of
+CUSUM for minimizing expected detection delay subject to a false-alarm
+constraint.  Our Vol-HMM augments the standard HMM filter with a CUSUM layer
+precisely because CUSUM provides a rapid response to mean shifts that the
+HMM's transition dynamics alone may miss during the first few post-switch
+observations.  The combination---soft Bayesian filtering for steady-state
+regime tracking plus hard CUSUM triggering for abrupt shifts---exploits the
+complementary strengths of the two approaches.
+
+% ---------------------------------------------------------------
+\section{Risk-Constrained Portfolio Management}
+% ---------------------------------------------------------------
+
+\subsection{CPPI: Constant Proportion Portfolio Insurance}
+
+Black and Perold (1992) formalized CPPI as a dynamic asset allocation strategy
+that preserves a minimum wealth floor.  The key formula,
+$\text{Exposure}_t = m \cdot (W_t - \text{Floor}_t)$, was shown to guarantee
+(in continuous time) that wealth never falls below the floor.  In discrete time,
+slippage through the floor is possible during large single-period drawdowns, a
+limitation we document experimentally.
+
+Busseti, Ryu, and Boyd (2016) extended the CPPI idea into a convex optimization
+framework, computing bet size via constrained log-growth maximization.  Our
+implementation follows the spirit of their drawdown-constrained Kelly framework,
+using the CPPI cushion formula to modulate the Kelly leverage dynamically.  The
+formal guarantee is stated in Proposition~\ref{prop:cppi_bound} of
+Chapter~\ref{ch:methodology}.
+
+\subsection{Sharpe and Sortino Ratios}
+
+Sharpe (1966) proposed the reward-to-variability ratio as a risk-adjusted
+performance measure; the annualized form is
+$\mathcal{S} = (\bar{R}/\hat\sigma)\sqrt{252}$.  The Sortino ratio (Sortino
+and van der Meer, 1991) replaces total volatility with downside volatility,
+making it more appropriate for strategies that explicitly bound drawdowns.
+We compute both metrics in $O(T)$ via running-statistics recursions to avoid
+storing full return histories in the simulation loop.
+
+% ---------------------------------------------------------------
+\section{Positioning of This Thesis}
+% ---------------------------------------------------------------
+
+This thesis sits at the intersection of three bodies of work: the Bayesian
+bandit literature (Thompson, UCB, EXP3), the Kelly/growth-rate optimization
+literature, and the regime-detection and risk-control literature (HMM, CUSUM,
+CPPI).  The specific combination---a Bayesian filter over HMM states that
+drives a Kelly-sized bet subject to a CPPI floor, evaluated under a unified
+CRN simulation framework with empirical S\&P~500 validation---does not appear
+to have been studied as a single integrated system in the prior literature.
+The closest antecedents are Thorp and Kassouf (1967) on dynamic Kelly sizing
+and Ang and Bekaert (2002) on regime-conditional portfolio allocation, but
+neither combines all three components in the manner presented here.

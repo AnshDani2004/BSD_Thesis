@@ -1,112 +1,159 @@
 import React, { useState, useEffect } from 'react';
 
+const SCENARIOS = [
+  {
+    key:   'Stationary',
+    label: 'Stationary',
+    desc:  'Evaluates pure MAB exploration-exploitation trade-offs where arm distributions remain fixed globally. Validates asymptotic Bayesian and Upper Confidence Bound properties against the Kelly Oracle.',
+  },
+  {
+    key:   'Adversarial',
+    label: 'Adversarial',
+    desc:  'Subject to a catastrophic deterministic variance shock at T=125 (Bull Market crashes into a Student-t₃ fat-tailed Bear Market). Validates ruin-reduction properties of Vol-HMM and CPPI floor.',
+  },
+  {
+    key:   'Drift',
+    label: 'Drift',
+    desc:  'Undergoes a slow, continuous probabilistic regime shift (Gaussian random walk on μ). Tests an algorithm\'s capability to untangle stickiness and unlearn its prior distribution in real time.',
+  },
+];
+
 function Experiments() {
   const [activeExp, setActiveExp] = useState('Stationary');
   const [statsData, setStatsData] = useState(null);
-  
-  const scenarios = ['Stationary', 'Adversarial', 'Drift'];
 
   useEffect(() => {
+    setStatsData(null);
     fetch(`/results/tables/${activeExp}_stats.json`)
       .then(res => res.json())
       .then(data => setStatsData(data))
-      .catch(err => console.error("Could not load stats data", err));
+      .catch(err => console.error('Could not load stats data', err));
   }, [activeExp]);
+
+  const scenario = SCENARIOS.find(s => s.key === activeExp);
+
+  const ruinClass = (ruin) => {
+    if (ruin === 0)   return 'ruin-zero';
+    if (ruin < 0.05)  return 'ruin-low';
+    return 'ruin-high';
+  };
 
   return (
     <div style={{ display: 'flex', height: '100%', width: '100%' }}>
-      <aside className="sidebar" style={{ width: '250px' }}>
-        <h3 style={{ marginBottom: '20px' }}>EXPERIMENT LOGS</h3>
-        {scenarios.map(s => (
-          <button 
-            key={s}
-            className={`term-btn-exec ${activeExp === s ? 'active' : ''}`}
-            onClick={() => setActiveExp(s)}
-            style={{ 
-              marginBottom: '10px', 
-              background: activeExp === s ? 'var(--term-cyan)' : 'transparent',
-              color: activeExp === s ? '#000' : 'var(--term-amber)',
-              border: `1px solid ${activeExp === s ? 'transparent' : 'var(--term-dim)'}`
-            }}
+
+      {/* ── Sidebar ── */}
+      <aside className="sidebar" style={{ width: '220px' }}>
+        <div className="sidebar-section-title">Experiment Logs</div>
+        {SCENARIOS.map(s => (
+          <button
+            key={s.key}
+            className={`exp-sidebar-btn ${activeExp === s.key ? 'active' : ''}`}
+            onClick={() => setActiveExp(s.key)}
           >
-            {s.toUpperCase()} SCENARIO
+            <span className="btn-dot" />
+            {s.label} Scenario
           </button>
         ))}
+
+        <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+          <div style={{ fontSize: '10px', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+            N = 100 simulations<br />
+            T = 250 steps<br />
+            CRN enforced
+          </div>
+        </div>
       </aside>
 
-      <section className="content-pane" style={{ padding: '30px', overflowY: 'auto' }}>
-        <h2 style={{ fontSize: '24px', borderBottom: '2px solid var(--term-border)', paddingBottom: '10px', marginBottom: '30px' }}>
-          OFFLINE EXPERIMENT BATCH: {activeExp.toUpperCase()} MAB
-        </h2>
-        
-        <div style={{ marginBottom: '30px' }}>
-          <p style={{ color: '#CCC', fontSize: '15px' }}>
-            {activeExp === 'Stationary' && "Evaluates pure MAB exploration-exploitation trade-offs where arm distributions remain fixed globally. Validates pure asymptotic Bayesian and Upper Confidence Bound properties."}
-            {activeExp === 'Adversarial' && "Subject to a catastrophic deterministic variance shock at T=125 (e.g., Bull Market crashes directly into a Student-T Fat-Tailed Bear Market). Validates EXP3 robust adversarial bounds."}
-            {activeExp === 'Drift' && "Undergoes a slow, continuous probabilistic regime shift (Gaussian random walk on the expected return $\mu$). Tests an algorithm's capability to untangle stickiness and unlearn its prior distribution."}
+      {/* ── Main content ── */}
+      <section
+        className="content-pane"
+        style={{ padding: '24px', overflowY: 'auto' }}
+      >
+        {/* Page header */}
+        <div style={{ marginBottom: '20px' }}>
+          <h2 style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '18px',
+            fontWeight: 700,
+            color: 'var(--asu-maroon)',
+            marginBottom: '8px',
+          }}>
+            Offline Experiment Batch: {activeExp.toUpperCase()} MAB
+          </h2>
+          <hr className="gold-rule" style={{ marginBottom: '12px' }} />
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '800px' }}>
+            {scenario?.desc}
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-          {/* Fan Chart */}
-          <div style={{ background: '#050505', border: '1px solid var(--term-border)', padding: '15px' }}>
-            <h3 style={{ marginBottom: '15px' }}>MONTE CARLO ASYMPTOTIC TRAJECTORY FAN</h3>
-            <img 
-              src={`/results/figures/${activeExp}_wealth_fan.png`} 
-              alt={`${activeExp} Fan Chart`} 
-              style={{ width: '100%', borderRadius: '4px' }} 
+        {/* Chart grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '20px',
+        }}>
+
+          {/* Fan chart */}
+          <div className="chart-panel">
+            <h3>Monte Carlo Asymptotic Trajectory Fan</h3>
+            <img
+              src={`/results/figures/${activeExp}_wealth_fan.png`}
+              alt={`${activeExp} Fan Chart`}
             />
-            <p style={{ marginTop: '10px', fontSize: '11px', color: 'var(--term-dim)' }}>
-              Solid line plots Median Expected Wealth. Shaded bands capture 10th-90th empirical percentiles globally across all Monte Carlo paths.
+            <p className="chart-caption">
+              Solid line: median expected wealth. Shaded bands: 10th–90th percentile
+              across all Monte Carlo paths.
             </p>
           </div>
 
-          {/* CDF Chart */}
-          <div style={{ background: '#050505', border: '1px solid var(--term-border)', padding: '15px' }}>
-            <h3 style={{ marginBottom: '15px' }}>EMPIRICAL CDF (PROBABILITY OF RUIN / DECAY)</h3>
-            <img 
-              src={`/results/figures/${activeExp}_cdf.png`} 
-              alt={`${activeExp} CDF`} 
-              style={{ width: '100%', borderRadius: '4px' }} 
+          {/* CDF chart */}
+          <div className="chart-panel">
+            <h3>Empirical CDF of Final Wealth</h3>
+            <img
+              src={`/results/figures/${activeExp}_cdf.png`}
+              alt={`${activeExp} CDF`}
             />
-            <p style={{ marginTop: '10px', fontSize: '11px', color: 'var(--term-dim)' }}>
-              Non-parametric Empirical Cumulative Distribution computing $\Pr(W_T \leq w)$. Intersection at extreme left denotes absolute ruin absorbing barriers.
+            <p className="chart-caption">
+              Non-parametric ECDF computing P(W_T ≤ w). A right-shifted CDF indicates
+              stochastically greater wealth. Left mass at zero denotes ruin.
             </p>
           </div>
 
-          {/* Regret Dynamics Chart */}
-          <div style={{ background: '#050505', border: '1px solid var(--term-border)', padding: '15px', gridColumn: '1 / -1' }}>
-            <h3 style={{ marginBottom: '15px' }}>CUMULATIVE REGRET DYNAMICS (ORACLE DEVIATION)</h3>
-            <img 
-              src={`/results/figures/${activeExp}_regret_dynamics.png`} 
-              alt={`${activeExp} Regret`} 
-              style={{ width: '100%', borderRadius: '4px', maxHeight: '450px', objectFit: 'contain' }} 
+          {/* Regret dynamics — full width */}
+          <div className="chart-panel" style={{ gridColumn: '1 / -1' }}>
+            <h3>Cumulative Regret Dynamics (Oracle Deviation)</h3>
+            <img
+              src={`/results/figures/${activeExp}_regret_dynamics.png`}
+              alt={`${activeExp} Regret`}
+              style={{ maxHeight: '400px', objectFit: 'contain' }}
             />
-            <p style={{ marginTop: '10px', fontSize: '11px', color: 'var(--term-dim)' }}>
-              Cumulative deviation of algorithmic log-wealth relative to an omniscient Kelly Oracle. Lower paths indicate superior structural convergence towards theoretical maximal growth.
+            <p className="chart-caption">
+              Cumulative deviation of algorithmic log-wealth relative to the omniscient
+              Kelly Oracle. Lower paths indicate superior structural convergence toward
+              theoretical maximal growth. Oracle bets f* = clip(μ/σ², 0, 1).
             </p>
           </div>
 
-          {/* Statistical Output Table */}
-          <div style={{ background: '#050505', border: '1px solid var(--term-border)', padding: '15px', gridColumn: '1 / -1' }}>
-            <h3 style={{ marginBottom: '15px', color: 'var(--term-amber)' }}>TERMINAL DISTRIBUTION STATISTICS (DATA ARRAYS)</h3>
+          {/* Stats table — full width */}
+          <div className="chart-panel" style={{ gridColumn: '1 / -1' }}>
+            <h3>Terminal Distribution Statistics</h3>
             {statsData ? (
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+              <table className="stats-table">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--term-border)' }}>
-                    <th style={{ padding: '8px', color: 'var(--term-dim)' }}>AGENT ALGORITHM</th>
-                    <th style={{ padding: '8px', color: 'var(--term-dim)' }}>MEDIAN TERMINAL WEALTH</th>
-                    <th style={{ padding: '8px', color: 'var(--term-dim)' }}>MAX THEORETICAL PEAK</th>
-                    <th style={{ padding: '8px', color: 'var(--term-red)' }}>PROBABILITY OF RUIN</th>
+                  <tr>
+                    <th>Agent Algorithm</th>
+                    <th>Median Terminal Wealth</th>
+                    <th>Max Observed Peak</th>
+                    <th className="col-ruin">Ruin Probability</th>
                   </tr>
                 </thead>
                 <tbody>
                   {Object.entries(statsData.agents).map(([agentName, stats]) => (
-                    <tr key={agentName} style={{ borderBottom: '1px dotted #333' }}>
-                      <td style={{ padding: '8px', color: 'var(--term-cyan)' }}>{agentName}</td>
-                      <td style={{ padding: '8px' }}>{stats.median_wealth.toFixed(2)}x</td>
-                      <td style={{ padding: '8px' }}>{stats.max_wealth.toFixed(2)}x</td>
-                      <td style={{ padding: '8px', color: stats.ruin_risk > 0 ? 'var(--term-red)' : 'var(--term-green)' }}>
+                    <tr key={agentName}>
+                      <td className="agent-name">{agentName}</td>
+                      <td>{stats.median_wealth.toFixed(2)}×</td>
+                      <td>{stats.max_wealth.toFixed(2)}×</td>
+                      <td className={ruinClass(stats.ruin_risk)}>
                         {(stats.ruin_risk * 100).toFixed(1)}%
                       </td>
                     </tr>
@@ -114,9 +161,14 @@ function Experiments() {
                 </tbody>
               </table>
             ) : (
-              <p style={{ color: 'var(--term-dim)' }}>Loading statistics array...</p>
+              <div className="empty-state" style={{ height: '80px' }}>
+                <span style={{ color: 'var(--text-dim)', fontSize: '12px' }}>
+                  Loading statistics…
+                </span>
+              </div>
             )}
           </div>
+
         </div>
       </section>
     </div>

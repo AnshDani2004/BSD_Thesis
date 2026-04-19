@@ -13,16 +13,18 @@ plt.style.use('dark_background')
 sns.set_context("paper", font_scale=1.2)
 
 COLORS = {
-    'Vol-HMM (Proposed)':            '#00FF41',  # Matrix Green  (proposed method 1)
-    'Risk-Constrained CPPI':         '#FF33FF',  # Neon Magenta  (proposed method 2)
-    'Thompson Sampling':             '#FFB000',  # Amber
-    'EXP3':                          '#00E5FF',  # Cyan
-    'Naive Bayes':                   '#FF0033',  # Red
-    'UCB':                           '#FFFFFF',  # White
-    'Epsilon-Greedy':                '#A64D79',  # Purple
-    'Softmax':                       '#FF9900',  # Orange
-    # Flask API uses these full names:
-    'Vol-Augmented HMM (Proposed)':  '#00FF41',
+    # Proposed methods — visually dominant, distinct from all baselines
+    'Vol-HMM (Proposed)':           '#39FF14',  # Neon lime green
+    'Vol-Augmented HMM (Proposed)': '#39FF14',  # same alias
+    'Risk-Constrained CPPI':        '#FF33FF',  # Neon magenta
+    # Baselines
+    'Thompson Sampling':            '#FFB000',  # Amber
+    'EXP3':                         '#00E5FF',  # Cyan
+    'Naive Bayes':                  '#FF0033',  # Red
+    'UCB':                          '#DDDDDD',  # Light grey (was #00FF00 = same family as lime)
+    'Epsilon-Greedy':               '#A64D79',  # Purple
+    'Softmax':                      '#FF9900',  # Orange
+    'KellyOracle':                  '#888888',  # Dim grey
 }
 
 OUTPUT_DIR = os.path.join(

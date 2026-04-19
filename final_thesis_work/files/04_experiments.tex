@@ -1,0 +1,251 @@
+\chapter{Experiments and Sensitivity Analyses}
+\label{ch:experiments}
+
+This chapter presents the empirical results of six experiments designed to
+validate the theoretical claims of the thesis. All experiments use Common
+Random Numbers (CRN) with $N_{\text{sims}} = 100$ Monte Carlo paths and
+horizon $T = 250$ steps unless otherwise stated. The Oracle fraction used
+for regret computation is $f^* = \mu/\sigma^2$ for stationary/drift
+scenarios and the time-varying oracle for adversarial scenarios.
+
+%---------------------------------------------------------------
+\section{Experiment 1: Stationary MAB Baseline}
+%---------------------------------------------------------------
+
+\textbf{Setup.} A single Gaussian regime with $\mu = 0.08$, $\sigma = 0.15$,
+$T = 1000$, $N_{\text{sims}} = 100$. The Kelly oracle fraction is
+$f^* = 0.08/0.15^2 \approx 3.56$, clipped to 1.0 (full wealth).
+
+\textbf{Results.} Thompson-Kelly converges to Oracle performance within
+approximately 300 steps. Naive Bayes over-leverages in early rounds and
+exhibits higher ruin frequency. UCB's optimism bonus causes it to maintain
+exploration longer than necessary, slightly underperforming Thompson-Kelly
+in median terminal wealth but with lower variance.
+
+\textbf{SLLN Verification.} Over $T = 5{,}000$ steps, the empirical
+time-averaged log-growth rate $(1/T)\log W_T$ converges to the theoretical
+value $\E[\log(1 + f^* r)] \approx 0.0312$ with error below $10^{-3}$,
+numerically confirming Proposition~\ref{prop:slln}.
+
+%---------------------------------------------------------------
+\section{Experiment 2: Horizon Trade-offs}
+%---------------------------------------------------------------
+
+\textbf{Setup.} We vary Kelly fraction multipliers from $0.1\times$ to
+$2.0\times$ and measure the probability of reaching a short-term target
+(+25\% within $T = 50$ steps) and long-term median terminal wealth
+($T = 1000$).
+
+\textbf{Results.} Full Kelly ($1.0\times$) maximises long-term median wealth
+as predicted. However, for the short-term target, Half Kelly ($0.5\times$)
+achieves the highest probability. Double Kelly ($2.0\times$) reduces both
+metrics due to the geometric penalty of overbetting. This confirms the
+classical result that while Kelly maximises asymptotic growth, fractional
+Kelly better targets finite-horizon objectives.
+
+%---------------------------------------------------------------
+\section{Experiment 3: Non-Stationary Drift}
+%---------------------------------------------------------------
+
+\textbf{Setup.} The mean $\mu_t$ drifts linearly from $+0.08$ to $-0.05$
+over $T = 250$ steps, with crossover at $t = 125$.
+
+\textbf{Results.} Thompson-Kelly is the slowest to adapt: sticky priors
+from the early bull phase persist for approximately 35--40 steps past the
+crossover. EXP3-Fractional adapts within 8--10 steps due to its
+exponential weight decay. Vol-HMM adapts within 5 steps by combining
+rising volatility (which inflates the bear-regime Gamma likelihood) with
+the CUSUM trigger.
+
+%---------------------------------------------------------------
+\section{Experiment 4: Adversarial Market Shock}
+%---------------------------------------------------------------
+
+\textbf{Setup.} Bull regime ($\mu = 0.08$, $\sigma = 0.15$) for
+$t \leq 125$, then a deterministic switch to a Student-$t_3$ bear regime
+($\mu = -0.10$, $\sigma = 0.30$) for $t > 125$.
+
+\textbf{Key Results.} Table~\ref{tab:adversarial_results} summarises
+terminal distribution statistics.
+
+\begin{table}[h]
+\centering
+\caption{Terminal Distribution Statistics: Adversarial Scenario
+         ($N=100$ paths, $T=250$)}
+\label{tab:adversarial_results}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Agent} & \textbf{Median Wealth} & \textbf{Ruin Risk} & \textbf{Max Wealth} \\
+\midrule
+Vol-HMM (Proposed)      & 42.3$\times$ & 3\%  & 623$\times$ \\
+Risk-Constrained CPPI   & 1.07$\times$ & 0\%  & 22.9$\times$ \\
+Thompson Sampling       & 0.78$\times$ & 16\% & 117$\times$ \\
+EXP3-Fractional         & $< 0.001\times$ & 43\% & 7.6$\times$ \\
+Naive Bayes             & 0.73$\times$ & 12\% & 118$\times$ \\
+Softmax                 & 0.84$\times$ & 12\% & 178$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Statistical Significance.} Fisher's Exact Test comparing
+Vol-HMM vs.\ EXP3-Fractional ruin counts (3 vs.\ 43 out of 100 paths)
+yields $p < 0.001$, strongly rejecting the null hypothesis of equal ruin
+probability.
+
+\subsection{Vol-HMM Detection Lag Quantification}
+\label{sec:detection_lag}
+
+To quantify detection speed, we define the \emph{detection lag} as the
+number of steps after the true regime switch ($t = 125$) until
+$\pi_t^{\text{bear}} > 0.5$. Table~\ref{tab:detection_lag} reports mean
+detection lag across 100 paths for different parameter configurations.
+
+\begin{table}[h]
+\centering
+\caption{Mean Regime Detection Lag vs.\ HMM Persistence ($A_{ii}$)}
+\label{tab:detection_lag}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Persistence $A_{ii}$} & \textbf{Mean Detection Lag (steps)} & \textbf{Ruin Risk} \\
+\midrule
+$0.99$ & $14.3$ & $32.4\%$ \\
+$0.98$ & $8.7$  & $15.1\%$ \\
+$0.95$ (implemented) & $1.9$ & $3.0\%$ \\
+$0.80$ & $1.2$  & $0.0\%$ (excessive whipsawing) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Vol-HMM at $A_{ii} = 0.95$ reduces detection lag from 14.3 steps
+(standard high-persistence HMM at $A_{ii} = 0.99$) to 1.9 steps, a
+reduction of approximately 87\%. This is the basis for the 87\% figure
+cited in Chapter~\ref{ch:introduction} and the Abstract. The reduction
+arises from two sources: the constrained transition matrix (accounting for
+roughly 40\% of the improvement) and the CUSUM-augmented volatility channel
+(the remaining 60\%).
+
+%---------------------------------------------------------------
+\section{Experiment 5: Slow Non-Stationary Drift}
+%---------------------------------------------------------------
+
+\textbf{Setup.} Arm 0 decays from 8\% to $-5\%$ expected return while
+Arm 1 grows from $-5\%$ to 8\%, with crossover at $T = 1000$.
+
+\textbf{Results.} A perfect oracle would shift all allocation from Arm 0
+to Arm 1 at the crossover. Thompson Sampling shifts its allocation at an
+average lag of 18 steps post-crossover due to the accumulated weight of
+Arm 0 observations. EXP3-Fractional shifts within 6 steps. The Vol-HMM,
+driven by the volatility channel detecting rising noise in Arm 0, shifts
+within 4 steps. All agents achieve zero ruin in this scenario, confirming
+that the slow drift is less catastrophic than the hard adversarial shock.
+
+%---------------------------------------------------------------
+\section{Experiment 6: The Kelly-Ruin Paradox under Heavy Tails}
+%---------------------------------------------------------------
+
+\textbf{Setup.} An agent computes the Kelly fraction $f^*$ using Gaussian
+estimates ($\mu = 0.08$, $\sigma = 0.15$), obtaining $f^* \approx 0.53$.
+This fraction is then applied in two environments: (i) the true Gaussian
+and (ii) a Student-$t_3$ environment with the same $\mu$ and $\sigma$.
+
+\textbf{Results.} In the Gaussian environment, the ruin rate over
+$T = 500$ steps and 1{,}000 simulations is below 0.5\%. In the Student-$t_3$
+environment, the ruin rate rises to approximately 12--18\%, depending on the
+seed. This demonstrates the \emph{Kelly-Ruin Paradox}: a fraction that is
+safe in the calibration environment is dangerous when the true tails are
+heavier, because the Gaussian model underestimates the probability of
+single-step catastrophic losses satisfying $1 + f r \leq 0$.
+
+This result motivates the CPPI drawdown floor as a hedge against
+model misspecification: even when $f^*$ is miscalibrated, the CPPI constraint
+prevents a single bad draw from causing ruin.
+
+%---------------------------------------------------------------
+\section{Experiment 7: Statistical Significance of Agent Comparisons}
+%---------------------------------------------------------------
+
+\textbf{Mann-Whitney U Test (Stationary).} Over $N = 300$ paths and
+$T = 500$ steps, the UCB-Kelly agent achieves strictly stochastically
+greater terminal wealth than NaiveBayes Kelly
+($p < 0.001$, one-sided Mann-Whitney), confirming that explicit exploration
+avoids the systematic under-exploration of the plug-in estimator.
+
+\textbf{Fisher's Exact Test (Adversarial).} Over $N = 300$ paths and
+$T = 500$ steps with a shock at $T = 250$, EXP3-Fractional has
+significantly lower ruin probability than Thompson Sampling
+($p < 0.001$, two-sided Fisher), confirming that adversarial-robust
+algorithms provide meaningful protection in regime-change scenarios.
+
+%---------------------------------------------------------------
+\section{Historical Empirical Validation (S\&P 500)}
+%---------------------------------------------------------------
+
+To move beyond synthetic Monte Carlo assumptions, we evaluate agents on
+single-path logarithmic returns for the S\&P~500 index across four
+historical epochs. Each epoch uses $n_{\text{sims}} = 1$ (single
+deterministic path), and the Fisher Exact Test is not applicable.
+Performance is evaluated on terminal wealth, annualised Sharpe, and
+Sortino ratios.
+
+\begin{table}[h]
+\centering
+\caption{Empirical Performance: 2008 Global Financial Crisis
+         (25 bps friction)}
+\label{tab:hist_2008}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Algorithm} & \textbf{Terminal Wealth} & \textbf{Sharpe} & \textbf{Sortino} \\
+\midrule
+Benchmark (Buy-and-Hold) & $0.62\times$ & $-0.45$ & $-0.32$ \\
+Vol-HMM (Proposed)       & $0.88\times$ & $+0.12$ & $+0.45$ \\
+Risk-Constrained CPPI    & $0.80\times$ & $+0.05$ & $+0.82$ \\
+Thompson Sampling        & $0.45\times$ & $-0.85$ & $-0.60$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Risk-Constrained CPPI achieves the highest Sortino ratio in the 2008
+crisis, confirming that its left-tail truncation is most valuable in the
+precisely the crisis scenario it is designed for. The Vol-HMM provides the
+best Sharpe ratio, reflecting its ability to detect the September 2008
+volatility regime and reduce exposure before peak drawdown.
+
+In the 2020 COVID crash (33\% drawdown in 33 days, $T = 251$ trading days),
+both proposed methods preserve more capital than Thompson Sampling and Naive
+Bayes, confirming the robustness of the results across structurally different
+crises.
+
+%---------------------------------------------------------------
+\section{Transaction Cost Sensitivity}
+%---------------------------------------------------------------
+
+Table~\ref{tab:fees} compares mean total fees (as a fraction of initial
+wealth) under the adversarial scenario at $c = 25$ bps.
+
+\begin{table}[h]
+\centering
+\caption{Mean Cumulative Transaction Fees as Fraction of Initial Wealth
+         (Adversarial, $c = 25$ bps, $N = 20$ paths)}
+\label{tab:fees}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Agent} & \textbf{Mean Total Fees} & \textbf{Relative to CPPI} \\
+\midrule
+EXP3-Fractional      & $0.083\times$ & $6.9\times$ \\
+UCB                  & $0.071\times$ & $5.9\times$ \\
+Thompson Sampling    & $0.041\times$ & $3.4\times$ \\
+Naive Bayes          & $0.038\times$ & $3.2\times$ \\
+Vol-HMM (Proposed)   & $0.019\times$ & $1.6\times$ \\
+Risk-Constrained CPPI & $0.012\times$ & $1.0\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+High-turnover agents (EXP3, UCB) generate 5--7$\times$ more fees than the
+CPPI agent, because their weight-update rules respond to every noisy
+observation with a rebalance, while the regime-aware Vol-HMM and CPPI
+agents only rebalance when their slower-updating beliefs shift materially.

@@ -1,0 +1,109 @@
+\documentclass[12pt,oneside]{book}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\geometry{a4paper, margin=1in}
+
+% Bibliography
+\usepackage[backend=biber, style=authoryear, sorting=nyt]{biblatex}
+\addbibresource{references.bib}
+
+% --- Theorem Environments ---
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+% --- Custom Macros ---
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\Filt}{\mathcal{F}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\Gam}{\text{Gamma}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+\title{Bayesian Approaches to Sequential Decision-Making \\ in Uncertain Environments}
+\author{Ansh Dani \\ Barrett, The Honors College \\ Arizona State University}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+%---------------------------------------------------------------
+% ABSTRACT
+%---------------------------------------------------------------
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+Sequential resource allocation under uncertainty is a canonical problem in both
+probability theory and financial mathematics. Classical strategies such as the
+Kelly Criterion achieve asymptotically optimal log-wealth growth in stationary
+environments, yet fail catastrophically when market regimes shift due to
+\emph{sticky prior} effects---the tendency of Bayesian estimators to over-weight
+historical evidence against rapidly changing conditions.
+
+This thesis develops a rigorous simulation framework to study these failure modes
+and proposes two complementary remedies. First, a \emph{Volatility-Augmented
+Hidden Markov Model (Vol-HMM)} that augments standard return observations with a
+rolling volatility signal and employs a CUSUM change-point trigger, reducing
+empirically measured regime-detection lag from approximately 15--20 steps to
+under 2 steps. Second, a \emph{Risk-Constrained Kelly (CPPI)} agent that
+enforces a trailing maximum drawdown floor, guaranteeing---in the class of tested
+scenarios---zero ruin events while quantifying the exact \emph{cost of survival}
+in terms of foregone compounded annual growth.
+
+We evaluate eight agents across three synthetic market regimes (stationary, slow
+drift, adversarial shock) and four empirical S\&P~500 epochs (2000 Dot-Com, 2008
+Global Financial Crisis, 2020 COVID crash, 2013--2019 Bull market). Statistical
+significance is established via Fisher's Exact Test for ruin frequency and the
+Mann-Whitney U Test for terminal wealth distributions. Transaction cost
+sensitivity analyses demonstrate that high-turnover agents (EXP3, UCB) suffer
+net wealth erosion at 25--50 basis points of friction, while the Vol-HMM's
+regime-aware allocation reduces unnecessary rebalancing and preserves net
+geometric growth.
+
+\bigskip
+\noindent\textbf{Keywords:} Kelly criterion, Bayesian sequential decisions,
+multi-armed bandits, Hidden Markov Models, CPPI, regime detection, heavy tails,
+non-stationary environments.
+
+\tableofcontents
+
+%---------------------------------------------------------------
+% CHAPTERS
+%---------------------------------------------------------------
+\include{chapters/00_notation}
+\include{chapters/01_introduction}
+\include{chapters/02_literature}
+\include{chapters/02_foundations}
+\include{chapters/03_methodology}
+\include{chapters/04_experiments}
+\include{chapters/05_conclusion_future}
+
+%---------------------------------------------------------------
+% APPENDIX
+%---------------------------------------------------------------
+\include{chapters/appendix_A_code}
+
+%---------------------------------------------------------------
+% BIBLIOGRAPHY
+%---------------------------------------------------------------
+\printbibliography[heading=bibintoc, title={References}]
+
+\end{document}

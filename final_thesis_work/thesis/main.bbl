@@ -1,0 +1,132 @@
+\begin{thebibliography}{21}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Agrawal and Goyal(2012)]{agrawal2012analysis}
+Shipra Agrawal and Navin Goyal.
+\newblock Analysis of {Thompson} sampling for the multi-armed bandit problem.
+\newblock \emph{Proceedings of the Conference on Learning Theory (COLT)},
+  23:\penalty0 39.1--39.26, 2012.
+
+\bibitem[Ang and Bekaert(2002)]{ang2002regime}
+Andrew Ang and Geert Bekaert.
+\newblock Regime switches in interest rates.
+\newblock \emph{Journal of Business \& Economic Statistics}, 20\penalty0
+  (2):\penalty0 163--182, 2002.
+
+\bibitem[Auer et~al.(2002)Auer, Cesa-Bianchi, Freund, and
+  Schapire]{auer2002nonstochastic}
+Peter Auer, Nicolo Cesa-Bianchi, Yoav Freund, and Robert~E. Schapire.
+\newblock The nonstochastic multiarmed bandit problem.
+\newblock \emph{SIAM Journal on Computing}, 32\penalty0 (1):\penalty0 48--77,
+  2002.
+
+\bibitem[Black and Perold(1992)]{black1992theory}
+Fischer Black and Andr{\'e}~F. Perold.
+\newblock Theory of constant proportion portfolio insurance.
+\newblock \emph{Journal of Economic Dynamics and Control}, 16\penalty0
+  (3--4):\penalty0 403--426, 1992.
+
+\bibitem[Breiman(1961)]{breiman1961}
+Leo Breiman.
+\newblock Optimal gambling systems for favorable games.
+\newblock \emph{Proceedings of the Fourth Berkeley Symposium on Mathematical
+  Statistics and Probability}, 1:\penalty0 65--78, 1961.
+
+\bibitem[Busseti et~al.(2016)Busseti, Ryu, and Boyd]{busseti2016risk}
+Enzo Busseti, Ernest~K. Ryu, and Stephen Boyd.
+\newblock Risk-constrained {Kelly} gambling.
+\newblock \emph{Journal of Investing}, 25\penalty0 (3):\penalty0 118--134,
+  2016.
+
+\bibitem[Fama(1965)]{fama1965behavior}
+Eugene~F. Fama.
+\newblock The behavior of stock-market prices.
+\newblock \emph{Journal of Business}, 38\penalty0 (1):\penalty0 34--105, 1965.
+
+\bibitem[Hamilton(1989)]{hamilton1989new}
+James~D. Hamilton.
+\newblock A new approach to the economic analysis of nonstationary time series
+  and the business cycle.
+\newblock \emph{Econometrica}, 57\penalty0 (2):\penalty0 357--384, 1989.
+
+\bibitem[Kelly(1956)]{kelly1956new}
+John~L. Kelly.
+\newblock A new interpretation of information rate.
+\newblock \emph{Bell System Technical Journal}, 35\penalty0 (4):\penalty0
+  917--926, 1956.
+
+\bibitem[Lai and Robbins(1985)]{lai1985asymptotically}
+Tze~Leung Lai and Herbert Robbins.
+\newblock Asymptotically efficient adaptive allocation rules.
+\newblock \emph{Advances in Applied Mathematics}, 6\penalty0 (1):\penalty0
+  4--22, 1985.
+
+\bibitem[L'Ecuyer(1994)]{lecuyer1994efficiency}
+Pierre L'Ecuyer.
+\newblock Efficiency improvement via common random numbers.
+\newblock \emph{Winter Simulation Conference Proceedings}, pages 255--263,
+  1994.
+
+\bibitem[Mandelbrot(1963)]{mandelbrot1963variation}
+Benoit Mandelbrot.
+\newblock The variation of certain speculative prices.
+\newblock \emph{Journal of Business}, 36\penalty0 (4):\penalty0 394--419, 1963.
+
+\bibitem[Moustakides(1986)]{moustakides1986optimal}
+George~V. Moustakides.
+\newblock Optimal stopping times for detecting changes in distributions.
+\newblock \emph{Annals of Statistics}, 14\penalty0 (4):\penalty0 1379--1387,
+  1986.
+
+\bibitem[Page(1954)]{page1954}
+E.~S. Page.
+\newblock Continuous inspection schemes.
+\newblock \emph{Biometrika}, 41\penalty0 (1--2):\penalty0 100--115, 1954.
+
+\bibitem[Robbins(1952)]{robbins1952}
+Herbert Robbins.
+\newblock Some aspects of the sequential design of experiments.
+\newblock \emph{Bulletin of the American Mathematical Society}, 58\penalty0
+  (5):\penalty0 527--535, 1952.
+
+\bibitem[Samuelson(1979)]{samuelson1979}
+Paul~A. Samuelson.
+\newblock Why we should not make mean log of wealth big though years to act are
+  long.
+\newblock \emph{Journal of Banking \& Finance}, 3\penalty0 (4):\penalty0
+  305--307, 1979.
+
+\bibitem[Sharpe(1966)]{sharpe1966mutual}
+William~F. Sharpe.
+\newblock Mutual fund performance.
+\newblock \emph{Journal of Business}, 39\penalty0 (1):\penalty0 119--138, 1966.
+
+\bibitem[Sortino and Van Der~Meer(1991)]{sortino1991downside}
+Frank~A. Sortino and Robert Van Der~Meer.
+\newblock Downside risk.
+\newblock \emph{Journal of Portfolio Management}, 17\penalty0 (4):\penalty0
+  27--31, 1991.
+
+\bibitem[Thompson(1933)]{thompson1933likelihood}
+William~R. Thompson.
+\newblock On the likelihood that one unknown probability exceeds another in
+  view of the evidence of two samples.
+\newblock \emph{Biometrika}, 25\penalty0 (3--4):\penalty0 285--294, 1933.
+
+\bibitem[Thorp(2008)]{thorp2008}
+Edward~O. Thorp.
+\newblock The {Kelly} criterion in blackjack, sports betting, and the stock
+  market.
+\newblock In S.A. Zenios and W.T. Ziemba, editors, \emph{Handbook of Asset and
+  Liability Management}, pages 385--428. Elsevier, 2008.
+
+\bibitem[Ziemba and Hausch(1986)]{ziemba1986beat}
+William~T. Ziemba and Donald~B. Hausch.
+\newblock \emph{Beat the Racetrack}.
+\newblock Morrow, New York, 1986.
+
+\end{thebibliography}

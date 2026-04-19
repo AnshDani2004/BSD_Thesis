@@ -1,0 +1,91 @@
+\contentsline {chapter}{Abstract}{1}{chapter*.1}%
+\contentsline {chapter}{Notation Glossary}{4}{chapter*.3}%
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}The Core Problem: Sticky Priors and Regime Change}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Research Objectives}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Contributions}{6}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Methodological Overview}{6}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Thesis Outline}{6}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Literature Review}{8}{chapter.2}%
+\contentsline {section}{\numberline {2.1}The Kelly Criterion: Origins and Controversy}{8}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Kelly (1956) and Asymptotic Growth Optimality}{8}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}The Samuelson--Kelly Debate}{8}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Heavy Tails and the Kelly-Ruin Paradox}{9}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Multi-Armed Bandits: Exploration vs.\ Exploitation}{9}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}The Robbins Problem and the Lai--Robbins Lower Bound}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Thompson Sampling}{9}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Adversarial Bandits and EXP3}{9}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Regime-Switching Models and Change-Point Detection}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Hidden Markov Models in Finance}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}CUSUM Change-Point Detection}{10}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Risk-Constrained Portfolio Management}{10}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}CPPI: Constant Proportion Portfolio Insurance}{10}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Sharpe and Sortino Ratios}{10}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}Positioning of This Thesis}{11}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Theoretical Foundations}{12}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Probability Space and Filtration}{12}{section.3.1}%
+\contentsline {section}{\numberline {3.2}The Kelly Criterion and Asymptotic Optimality}{13}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Binary Kelly Formula}{13}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Continuous-Return Kelly Formula}{13}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Strong Law of Large Numbers and Asymptotic Optimality}{13}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Bayesian Updating and Posterior Beliefs}{14}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Multi-Armed Bandits}{14}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Upper Confidence Bound (UCB1)}{14}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Thompson Sampling}{15}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}EXP3 for Adversarial Bandits}{15}{subsection.3.4.3}%
+\contentsline {section}{\numberline {3.5}Regime-Switching Environments and the HMM}{15}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Methodology}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}The Stylized Market Environment}{16}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Regime Configurations}{16}{subsection.4.1.1}%
+\contentsline {paragraph}{Stationary.}{16}{section*.4}%
+\contentsline {paragraph}{Adversarial Shock.}{16}{section*.5}%
+\contentsline {paragraph}{Slow Gaussian Drift.}{16}{section*.6}%
+\contentsline {subsection}{\numberline {4.1.2}Common Random Numbers (CRN)}{16}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Decision Agents}{17}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Kelly Oracle (Benchmark)}{17}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Naive Bayes Kelly}{17}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Thompson Sampling Kelly}{17}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}UCB Agent}{17}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}EXP3 Agent (Fractional Variant)}{17}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.2.6}Proposed Method 1: Volatility-Augmented HMM (Vol-HMM)}{17}{subsection.4.2.6}%
+\contentsline {paragraph}{Two-dimensional observation.}{17}{section*.7}%
+\contentsline {paragraph}{Log-space forward algorithm.}{17}{section*.8}%
+\contentsline {paragraph}{CUSUM change-point trigger.}{18}{section*.9}%
+\contentsline {paragraph}{Transition constraint.}{18}{section*.10}%
+\contentsline {paragraph}{Bet sizing.}{18}{section*.11}%
+\contentsline {subsection}{\numberline {4.2.7}Proposed Method 2: Risk-Constrained Kelly (CPPI)}{18}{subsection.4.2.7}%
+\contentsline {section}{\numberline {4.3}Market Friction and Transaction Costs}{19}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Evaluation Metrics}{19}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Experiments and Sensitivity Analyses}{20}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Experiment 1: Stationary MAB Baseline}{20}{section.5.1}%
+\contentsline {paragraph}{Setup.}{20}{section*.12}%
+\contentsline {paragraph}{Results.}{20}{section*.13}%
+\contentsline {section}{\numberline {5.2}Experiment 2: SLLN Convergence Verification}{20}{section.5.2}%
+\contentsline {paragraph}{Setup.}{20}{section*.14}%
+\contentsline {paragraph}{Results.}{20}{section*.15}%
+\contentsline {section}{\numberline {5.3}Experiment 3: Horizon Trade-offs and Fractional Kelly}{21}{section.5.3}%
+\contentsline {paragraph}{Setup.}{21}{section*.16}%
+\contentsline {paragraph}{Results.}{21}{section*.17}%
+\contentsline {section}{\numberline {5.4}Experiment 4: Adversarial Shock --- Regime Break at $T/2$}{22}{section.5.4}%
+\contentsline {paragraph}{Setup.}{22}{section*.18}%
+\contentsline {paragraph}{Results.}{22}{section*.19}%
+\contentsline {section}{\numberline {5.5}Experiment 5: Slow Nonstationary Drift}{22}{section.5.5}%
+\contentsline {paragraph}{Setup.}{22}{section*.20}%
+\contentsline {paragraph}{Results.}{22}{section*.21}%
+\contentsline {section}{\numberline {5.6}Experiment 6: Kelly-Ruin Paradox in Heavy Tails}{23}{section.5.6}%
+\contentsline {paragraph}{Setup.}{23}{section*.22}%
+\contentsline {paragraph}{Results.}{23}{section*.23}%
+\contentsline {section}{\numberline {5.7}Sensitivity Analyses}{24}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Vol-HMM Transition Persistence $A_{ii}$}{24}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}CUSUM Drift Parameter $k_{\mathrm {drift}}$}{24}{subsection.5.7.2}%
+\contentsline {subsection}{\numberline {5.7.3}CPPI Multiplier $m$ and Floor $D_{\max }$}{24}{subsection.5.7.3}%
+\contentsline {section}{\numberline {5.8}Experiment 7: Statistical Significance}{25}{section.5.8}%
+\contentsline {paragraph}{Fisher's Exact Test.}{25}{section*.24}%
+\contentsline {paragraph}{Mann-Whitney U Test.}{25}{section*.25}%
+\contentsline {section}{\numberline {5.9}Historical Empirical Validation (S\&P 500)}{25}{section.5.9}%
+\contentsline {section}{\numberline {5.10}Transaction Fee Audit}{26}{section.5.10}%
+\contentsline {chapter}{\numberline {6}Conclusion and Future Work}{27}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Synthesis of Findings}{27}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Limitations}{28}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Future Directions}{28}{section.6.3}%
+\contentsline {chapter}{\numberline {A}Code-to-Methodology Verification}{30}{appendix.A}%

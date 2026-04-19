@@ -220,7 +220,12 @@ class WealthTracker:
 
     @property
     def sortino_ratio(self) -> float:
-        """Annualized Sortino Ratio (downside risk only)."""
+        """
+        Annualized Sortino Ratio.
+        
+        Calculated as mean return divided by downside deviation 
+        (root mean square of negative returns).
+        """
         if self._n_steps < 2: return 0.0
         mean = self._sum_r / self._n_steps
         downside_std = np.sqrt(max(1e-9, self._sum_r_neg2 / self._n_steps))

@@ -9,24 +9,30 @@ function App() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <header className="terminal-header">
-        <h1>[BSD_THESIS_ENGINE]</h1>
-        <div className="toolbar">
+        <h1>BSD_THESIS_ENGINE</h1>
+        <nav className="toolbar">
           <Link to="/">
-            <button className={location.pathname === '/' ? 'active' : ''}>HOME</button>
+            <button className={location.pathname === '/' ? 'active' : ''}>
+              Home
+            </button>
           </Link>
           <Link to="/simulator">
-            <button className={location.pathname === '/simulator' ? 'active' : ''}>SIMULATOR</button>
+            <button className={location.pathname === '/simulator' ? 'active' : ''}>
+              Simulator
+            </button>
           </Link>
           <Link to="/experiments">
-            <button className={location.pathname === '/experiments' ? 'active' : ''}>ACADEMIC LOGS</button>
+            <button className={location.pathname === '/experiments' ? 'active' : ''}>
+              Academic Logs
+            </button>
           </Link>
-        </div>
+        </nav>
       </header>
-      
+
       <div className="main-layout" style={{ flex: 1, overflow: 'auto' }}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/simulator" element={<Simulator />} />
+          <Route path="/"            element={<Home />} />
+          <Route path="/simulator"   element={<Simulator />} />
           <Route path="/experiments" element={<Experiments />} />
         </Routes>
       </div>

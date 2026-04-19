@@ -1,0 +1,124 @@
+\chapter{Conclusion and Future Work}
+\label{ch:conclusion}
+
+This thesis investigated the fundamental question of how a sequential
+decision-making agent should allocate resources in a market-like environment
+when the true return distribution is unknown, non-stationary, and potentially
+adversarial.  Beginning from the measure-theoretic foundations of
+filtered probability spaces and the Kelly Criterion, we showed that classical
+Bayesian agents fail systematically when the environment changes, and we
+proposed and validated two complementary remedies.
+
+% ---------------------------------------------------------------
+\section{Synthesis of Findings}
+% ---------------------------------------------------------------
+
+We demonstrated that structured exploration (Thompson Sampling) outperforms
+pure exploitation (Naive Bayes Kelly) in stationary learning contexts.
+However, Experiments~\ref{sec:exp4} and \ref{sec:exp5} established that
+standard Bayesian updating strategies are severely vulnerable to
+non-stationary environments.  The Sticky Prior Paradox
+(Proposition~\ref{prop:sticky_prior}) provides a precise quantification of
+this vulnerability: an agent with $T_0$ observations of past data requires
+$O(T_0)$ additional observations after a regime switch before its posterior
+belief shifts meaningfully, causing it to over-bet into a hostile environment
+for an extended period.
+
+To resolve these failures, we implemented and validated a two-pronged
+proposed framework:
+
+\begin{enumerate}
+    \item \textbf{Volatility-Augmented HMM (Vol-HMM):} By augmenting the
+    standard univariate return observation with rolling volatility and
+    combining the Bayesian forward filter with a CUSUM change-point trigger,
+    we demonstrated that regime detection lag drops from 14--15 steps (under
+    standard Beta-posterior agents) to approximately 1.9 steps.  The
+    Vol-HMM achieves a median terminal wealth of $42.3\times$ with only 3\%
+    ruin risk in the harshest adversarial shock environment, compared to
+    $0.78\times$ and 16\% ruin for Thompson Sampling.
+
+    \item \textbf{Risk-Constrained CPPI:} We proved
+    (Proposition~\ref{prop:cppi_bound}) that a CPPI dynamic leverage
+    constraint provably bounds the maximum drawdown at a user-specified
+    floor $D_{\max}$.  The CPPI achieves 0\% ruin probability across all
+    synthetic environments and the highest Sortino ratio among all agents in
+    the 2008 historical crisis, at the cost of lower median wealth in benign
+    regimes---the quantified ``cost of survival.''
+\end{enumerate}
+
+Finally, by integrating realistic transaction costs and single-path empirical
+S\&P~500 data for four distinct market epochs, we confirmed that both proposed
+methods maintain their theoretical advantages under real-world conditions.
+The fee audit (Section~\ref{sec:fee_audit}) further shows that the Vol-HMM's
+lower turnover frequency means its net-of-fees performance advantage over
+high-turnover adversarial agents is \emph{larger} than the gross advantage,
+not smaller.
+
+% ---------------------------------------------------------------
+\section{Limitations}
+% ---------------------------------------------------------------
+
+Several limitations of the current framework deserve explicit acknowledgment:
+
+\begin{enumerate}
+    \item \textbf{Specified emission parameters.}  The Vol-HMM emission
+    distributions are specified a priori rather than estimated via
+    Baum--Welch EM (Remark~\ref{rem:hmm_specified}).  While this choice
+    is justified by robustness concerns, it means the agent's performance
+    depends on the accuracy of the domain-knowledge priors.  Misspecified
+    priors could cause the filter to track the wrong regime.
+
+    \item \textbf{Discrete-time CPPI floor breach.}  The analytical guarantee
+    of Proposition~\ref{prop:cppi_bound} requires $m|r_{\min}|\leq 1$.  In
+    discrete time, a single large overnight return (e.g., the $-20\%$ day of
+    March 16, 2020) can breach the floor.  Our empirical experiments confirm
+    that breaches are rare but not impossible.
+
+    \item \textbf{Single-asset framework.}  All experiments model a single
+    risky asset.  Real portfolios exhibit cross-asset correlation and
+    regime coupling that the current framework does not capture.
+
+    \item \textbf{Fractional EXP3 variant.}  Our EXP3 implementation is a
+    continuous-fraction variant whose adversarial regret bound
+    (Theorem~\ref{thm:exp3_regret}) does not apply exactly
+    (Remark~\ref{rem:exp3_variant}).  The bound motivates the agent's design
+    rather than providing a strict guarantee.
+\end{enumerate}
+
+% ---------------------------------------------------------------
+\section{Future Directions}
+% ---------------------------------------------------------------
+
+Several high-impact research pathways remain open:
+
+\begin{enumerate}
+    \item \textbf{Multi-Asset Regime Coupling.}
+    Extending the Vol-HMM to detect correlated regime shifts across $N$
+    assets using non-Gaussian copula structures would be a natural next step.
+    A joint HMM over a multivariate return vector would allow the CPPI floor
+    to be defined in terms of portfolio drawdown rather than single-asset
+    drawdown.
+
+    \item \textbf{Learned Emission Parameters via Online EM.}
+    Replacing the fixed emission specification with an online Baum--Welch
+    update (using a sliding window to prevent over-accumulation of past data)
+    would make the Vol-HMM fully adaptive, removing the dependence on domain-
+    knowledge priors.
+
+    \item \textbf{Deep Reinforcement Learning for Hyperparameter Tuning.}
+    The CPPI multiplier $m$, the CUSUM threshold $h$, and the HMM persistence
+    $A_{ii}$ are currently fixed by grid search.  A DRL agent trained to
+    dynamically adjust these hyperparameters in response to real-time market
+    entropy could further reduce detection lag and improve the growth-safety
+    trade-off.
+
+    \item \textbf{Microstructure Friction Modeling.}
+    The current transaction cost model is proportional to turnover.
+    Incorporating bid-ask spread decay, order book impact, and market impact
+    functions would make the friction model more realistic for high-frequency
+    applications and would likely further favor low-turnover agents such as
+    the Vol-HMM.
+\end{enumerate}
+
+These directions represent the next iteration of protecting adaptive systems
+against the inherent non-stationarity of human-centric financial markets.

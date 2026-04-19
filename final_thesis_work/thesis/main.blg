@@ -1,0 +1,56 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+A level-1 auxiliary file: 00_notation.aux
+A level-1 auxiliary file: 01_introduction.aux
+A level-1 auxiliary file: 02_literature.aux
+A level-1 auxiliary file: 03_foundations.aux
+A level-1 auxiliary file: 04_methodology.aux
+A level-1 auxiliary file: 05_experiments.aux
+A level-1 auxiliary file: 06_conclusion.aux
+A level-1 auxiliary file: appendix_A_code.aux
+The style file: plainnat.bst
+Database file #1: references.bib
+Warning--I didn't find a database entry for "auer2002finite"
+You've used 21 entries,
+            2773 wiz_defined-function locations,
+            741 strings with 7770 characters,
+and the built_in function-call counts, 9028 in all, are:
+= -- 863
+> -- 333
+< -- 21
++ -- 119
+- -- 98
+* -- 680
+:= -- 1359
+add.period$ -- 64
+call.type$ -- 21
+change.case$ -- 94
+chr.to.int$ -- 21
+cite$ -- 42
+duplicate$ -- 444
+empty$ -- 847
+format.name$ -- 131
+if$ -- 1906
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 22
+newline$ -- 113
+num.names$ -- 86
+pop$ -- 172
+preamble$ -- 1
+purify$ -- 74
+quote$ -- 0
+skip$ -- 320
+stack$ -- 0
+substring$ -- 541
+swap$ -- 39
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 226
+warning$ -- 0
+while$ -- 106
+width$ -- 0
+write$ -- 281
+(There was 1 warning)

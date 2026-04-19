@@ -1,0 +1,321 @@
+\chapter{Methodology}
+\label{ch:methodology}
+
+Our simulation framework models a stylized market environment in which agents
+repeatedly allocate resources under uncertainty. This chapter specifies the
+environment dynamics, each agent's decision rule, and the formal guarantees
+we establish for the two proposed methods.
+
+%---------------------------------------------------------------
+\section{The Stylized Market Environment}
+%---------------------------------------------------------------
+
+We simulate environments where payoffs are governed by hidden, potentially
+changing parameters. At each step $t$, the environment draws a return
+$r_t$ from a regime-specific distribution parameterised by $(\mu_{S_t},
+\sigma_{S_t})$, where $S_t \in \{0,1\}$ is a hidden Markov state. The agent
+observes only $r_t$ after placing its bet; the hidden state $S_t$ is
+never directly revealed.
+
+\subsection{Synthetic Environments}
+
+Three synthetic regimes are evaluated:
+
+\begin{enumerate}
+    \item \textbf{Stationary:} A single regime with $r_t \overset{iid}{\sim}
+    \Normal(\mu, \sigma^2)$, $\mu = 0.08$, $\sigma = 0.15$. Provides a
+    controlled test of exploration-exploitation convergence where theory
+    predicts Thompson-Kelly should match the Oracle asymptotically.
+
+    \item \textbf{Adversarial Shock:} Bull regime ($\mu = 0.08, \sigma = 0.15$)
+    for $t \leq T/2$, then a deterministic switch to a heavy-tailed bear
+    regime ($r_t \sim t_3(-0.10, 0.30^2)$) for $t > T/2$. The Student-$t$
+    with $\nu=3$ degrees of freedom has infinite fourth moment, creating the
+    heavy-tail ruin conditions analysed in Experiment~6.
+
+    \item \textbf{Slow Gaussian Drift:} The mean $\mu_t$ follows a
+    deterministic linear drift from $+0.08$ to $-0.05$ over the horizon,
+    testing whether agents can ``unlearn'' a decaying regime gracefully.
+\end{enumerate}
+
+\subsection{Common Random Numbers (CRN)}
+
+All agents in a given experiment share the same pre-generated return matrix
+$\mathbf{R} \in \R^{N_{\text{sims}} \times T}$. This \emph{Common Random
+Numbers} methodology eliminates idiosyncratic Monte Carlo variance from
+agent comparisons, so that differences in outcomes are attributable
+solely to the agents' decision rules rather than to sampling noise.
+Formally, for all agents $a, b$ and all simulations $i$:
+\[
+    r_t^{(i)}[\text{agent } a] = r_t^{(i)}[\text{agent }b] = R_{i,t}.
+\]
+
+%---------------------------------------------------------------
+\section{Agent Descriptions}
+\label{sec:agents}
+%---------------------------------------------------------------
+
+\subsection{Kelly Oracle (Benchmark)}
+
+The Oracle knows the true regime-conditional distribution at each step
+and bets $f_t^{\text{Oracle}} = f^*(\mu_{S_t}, \sigma_{S_t})$, where
+$f^* = \mu/\sigma^2$ is the continuous Kelly fraction. This agent is
+inadmissible (it uses future information) and serves only as a theoretical
+upper bound on regret.
+
+\subsection{NaiveBayes Kelly}
+
+As defined in Chapter~\ref{ch:foundations}, this agent plugs the Beta
+posterior mean into the Kelly formula. It is included to demonstrate the
+sticky prior failure mode: in adversarial experiments, this agent
+maintains a bull-regime prior well into the bear regime, over-leveraging
+and incurring catastrophic losses.
+
+\subsection{Thompson-Kelly Agent}
+
+Samples $\tilde{p} \sim \text{Beta}(\alpha_t, \beta_t)$ and bets
+$f_t = \text{Kelly}(\tilde{p})$. The posterior sampling provides implicit
+uncertainty-driven leverage reduction.
+
+\subsection{UCB-Kelly Agent}
+
+Computes an Upper Confidence Bound on the win probability:
+\[
+    p_t^{\text{UCB}} = \hat{p}_t + \sqrt{\frac{2\ln t}{n_t}},
+\]
+clipped to $[0,1]$, then bets $f_t = \text{Kelly}(p_t^{\text{UCB}})$.
+The exploration bonus inflates the bet when an arm is under-explored.
+
+\subsection{EXP3-Fractional Agent}
+
+\begin{remark}[Deviation from Canonical EXP3]
+\label{rem:exp3}
+    The canonical EXP3 algorithm of \textcite{auer2002nonstochastic} selects
+    a \emph{single} arm at each step with probability proportional to
+    exponentially re-weighted rewards. In our continuous betting context,
+    we implement a \emph{fractional} variant where the EXP3 probability
+    vector is used directly as a soft allocation: $f_{i,t} = p_{i,t}
+    \cdot f_{\max}$. This variant does not satisfy the original EXP3 regret
+    bound verbatim; it should be understood as an EXP3-inspired adversarial
+    baseline that retains the exponential weight update but distributes
+    rather than concentrates allocation. We cite the original EXP3 bound
+    as a qualitative motivator, not a strict guarantee for this variant.
+\end{remark}
+
+\subsection{Softmax-Kelly Agent}
+
+Assigns arm probabilities via a Boltzmann distribution over empirical
+means with temperature $\tau$: $p_i \propto \exp(\hat{\mu}_i / \tau)$,
+then weights Kelly fractions by these probabilities.
+
+%---------------------------------------------------------------
+\section{Proposed Method I: Volatility-Augmented HMM (Vol-HMM)}
+\label{sec:vol-hmm}
+%---------------------------------------------------------------
+
+The Vol-HMM extends the standard HMM (Definition~\ref{def:hmm}) by
+augmenting the scalar return observation $r_t$ with a rolling volatility
+feature $v_t = \text{std}(r_{t-k+1}, \ldots, r_t)$ for window $k$.
+
+\subsection{Two-Dimensional Emission Model}
+
+For each regime $j \in \{\text{bull}, \text{bear}\}$, the emission
+probability factorises over the two features:
+\begin{equation}
+\label{eq:emission}
+    \log b_j(r_t, v_t) = \log \Normal(r_t;\, \mu_j, \sigma_j^2) + 
+    \log \Gam(v_t;\, \kappa_j, \theta_j),
+\end{equation}
+where $\Gam(\cdot;\kappa, \theta)$ is the Gamma density with shape $\kappa$
+and scale $\theta$.
+
+\begin{remark}[Fixed vs.\ Estimated Emission Parameters]
+\label{rem:hmm-fixed}
+    The emission parameters $(\mu_j, \sigma_j, \kappa_j, \theta_j)$ are
+    \emph{specified a priori} based on domain knowledge of typical bull and
+    bear market statistics, rather than estimated via the Baum-Welch EM
+    algorithm. This design choice is deliberate: with only $T = 250$
+    observations per episode, EM estimation risks overfitting the emission
+    model to the training sequence, particularly for the Gamma parameters on
+    the volatility channel. By specifying the emission model, we treat the
+    HMM as a \emph{Bayesian filter} (propagating belief over a pre-specified
+    model) rather than as a generative model to be fitted. This is a standard
+    approach in engineering applications of HMMs where the state semantics
+    are known a priori (see, e.g., Kalman filtering literature).
+\end{remark}
+
+\subsection{Constrained Transition Matrix}
+
+To address the sticky prior problem, we impose
+\[
+    A_{ii} \leq A_{\max} = 0.95, \quad i \in \{\text{bull}, \text{bear}\}.
+\]
+This ensures that even with zero new evidence, the probability of a regime
+change at each step is at least $1 - 0.95 = 5\%$, preventing the posterior
+from becoming arbitrarily concentrated.
+
+\subsection{CUSUM Augmentation}
+
+The CUSUM statistic for detecting a downward mean shift from the bull
+regime is:
+\[
+    S_t^- = \max\!\bigl(0,\, S_{t-1}^- - z_t - k\bigr), \quad
+    z_t = \frac{r_t - \mu_{\text{bull}}}{\sigma_{\text{bull}}},
+\]
+where $k > 0$ is a drift parameter. When $S_t^- > h$ (threshold $h = 3$
+in our implementation), the log-emission for the bear state is boosted by
+an additive constant, triggering rapid reallocation. This hybrid approach
+combines CUSUM's distribution-free rapid detection with the HMM's
+probabilistic regime attribution.
+
+\subsection{Kelly Allocation}
+
+Given filtered belief $\pi_t = (\pi_t^{\text{bull}}, \pi_t^{\text{bear}})$,
+the bet fraction is
+\[
+    f_t^{\text{HMM}} = \pi_t^{\text{bull}} \cdot f^*_{\text{bull}} +
+    \pi_t^{\text{bear}} \cdot f^*_{\text{bear}},
+\]
+where $f^*_j = \max(0, \mu_j/\sigma_j^2)$. In the bear regime, $\mu_j < 0$
+implies $f^*_j = 0$, so the agent goes to cash automatically once the
+posterior shifts sufficiently.
+
+\begin{proposition}[Monotone Leverage in Belief]
+\label{prop:leverage}
+    Under the Vol-HMM, $f_t^{\text{HMM}}$ is a non-increasing function of
+    $\pi_t^{\text{bear}}$. Specifically,
+    \[
+        \frac{\partial f_t^{\text{HMM}}}{\partial \pi_t^{\text{bear}}} =
+        f^*_{\text{bear}} - f^*_{\text{bull}} \leq 0,
+    \]
+    since $f^*_{\text{bear}} \leq f^*_{\text{bull}}$ when $\mu_{\text{bear}}
+    \leq \mu_{\text{bull}}$.
+\end{proposition}
+
+This proposition ensures the Vol-HMM \emph{automatically de-levers} as
+evidence accumulates for the bear regime, with no ad hoc rule required.
+
+%---------------------------------------------------------------
+\section{Proposed Method II: Risk-Constrained Kelly (CPPI)}
+\label{sec:cppi}
+%---------------------------------------------------------------
+
+\subsection{Drawdown Floor and Cushion}
+
+Define the peak wealth up to time $t$ as
+$W_t^{\max} = \max_{s \leq t} W_s$. The drawdown floor is
+\[
+    F_t = W_t^{\max}(1 - D_{\max}),
+\]
+where $D_{\max}$ is the maximum permissible drawdown (e.g., $0.20$ = 20\%).
+The \emph{cushion} at time $t$ is $C_t = W_t - F_t \geq 0$.
+
+\subsection{CPPI Leverage}
+
+The constrained leverage multiplier is
+\[
+    \lambda_t = \min\!\left(1,\; \frac{m \cdot C_t}{W_t}\right),
+\]
+where $m \geq 1$ is the CPPI multiplier. The effective betting fraction is
+$f_t^{\text{CPPI}} = \lambda_t \cdot f_t^{\text{base}}$, where
+$f_t^{\text{base}}$ is any base Kelly fraction.
+
+\begin{proposition}[CPPI Soft Floor in Discrete Time]
+\label{prop:cppi}
+    Suppose $|f_t r_t| \leq 1 - \varepsilon$ almost surely for some
+    $\varepsilon > 0$ (bounded single-step loss). Then the CPPI strategy
+    guarantees $W_t \geq F_t(1 - \delta)$ for all $t$, where $\delta$
+    depends on $m$ and the maximum single-period loss.
+\end{proposition}
+
+\begin{proof}[Proof Sketch]
+    If $C_t > 0$ and $m \leq 1/\varepsilon$, then
+    $f_t^{\text{CPPI}} \cdot |r_t| \leq \lambda_t \leq m C_t / W_t$.
+    The worst-case single-step wealth change is
+    $W_{t+1} \geq W_t(1 - m C_t/W_t) = W_t - m C_t = F_t + (1-m)C_t$.
+    For $m \leq 1 + F_t/C_t$, we have $W_{t+1} \geq F_t$.
+    In discrete time with large single-step shocks, the floor can be
+    breached (``gap risk''); our simulation quantifies this empirically.
+    \qed
+\end{proof}
+
+\begin{remark}[Gap Risk in Discrete Time]
+    Proposition~\ref{prop:cppi} requires bounded single-step losses. Under
+    the Student-$t(\nu=3)$ distribution, the loss $1 + f_t r_t$ can be
+    arbitrarily close to zero with non-negligible probability, creating
+    gap risk. In practice, we observe zero ruin events for the CPPI agent
+    across all tested scenarios, suggesting the floor is sufficient in
+    the simulated parameter regime.
+\end{remark}
+
+%---------------------------------------------------------------
+\section{Market Friction and Transaction Costs}
+%---------------------------------------------------------------
+
+To bridge theoretical growth and empirical deployment, we model
+transaction costs at each step. Let $\hat{f}_{t-1}$ denote the effective
+exposure after the previous price move:
+\[
+    \hat{f}_{t-1} = \frac{f_{t-1}(1 + r_{t-1})}{1 + f_{t-1} r_{t-1}}.
+\]
+The turnover at step $t$ is $\Delta f_t = |f_t - \hat{f}_{t-1}|$, and the
+cost-adjusted multiplier is
+\begin{equation}
+\label{eq:friction}
+    M_t = 1 + f_t r_t - c \cdot \Delta f_t,
+\end{equation}
+where $c$ is the transaction cost in basis points divided by 10{,}000. If
+$M_t \leq 0$, the path is ruined. This formulation penalises ``chattering''
+algorithms that rebalance frequently on noise, a property we exploit in
+Section~\ref{ch:experiments} to show that EXP3 and UCB incur
+disproportionate fee drag.
+
+%---------------------------------------------------------------
+\section{Evaluation Metrics}
+%---------------------------------------------------------------
+
+Strategies are evaluated against the following metrics:
+
+\begin{itemize}
+    \item \textbf{Median Terminal Wealth} $\tilde{W}_T$: Robust to heavy
+    right tails that inflate the mean.
+
+    \item \textbf{Probability of Ruin} $\hat{p}_{\text{ruin}}$:
+    Empirical fraction of paths reaching $W_t = 0$.
+
+    \item \textbf{Annualised Sharpe Ratio}:
+    \[
+        \mathcal{S} = \frac{\bar{R}}{\hat{\sigma}(R)} \cdot \sqrt{252},
+    \]
+    where $\bar{R}$ and $\hat{\sigma}(R)$ are the sample mean and standard
+    deviation of step-wise returns, and 252 is the assumed number of trading
+    days per year.
+
+    \item \textbf{Annualised Sortino Ratio}:
+    \[
+        \mathcal{SOR} = \frac{\bar{R}}{\hat{\sigma}_{\downarrow}(R)} \cdot \sqrt{252},
+    \]
+    where $\hat{\sigma}_{\downarrow}(R) = \sqrt{\E[\min(R,0)^2]}$ is the
+    downside deviation. This metric rewards agents that avoid left-tail
+    losses rather than simply minimising total variance.
+
+    \item \textbf{Mean Total Fees}: Cumulative transaction costs in wealth
+    units, averaged across simulation paths.
+\end{itemize}
+
+\subsection{Statistical Tests}
+
+\begin{itemize}
+    \item \textbf{Fisher's Exact Test}: Applied to the $2 \times 2$
+    contingency table of ruin / survival counts for two agents. Tests the
+    null hypothesis $H_0: p_{\text{ruin}}^{(A)} = p_{\text{ruin}}^{(B)}$
+    against the two-sided alternative.
+
+    \item \textbf{Mann-Whitney U Test}: Applied to the terminal wealth
+    distributions of two agents. Non-parametric; appropriate given the
+    log-normal / power-law shape of compounding wealth. Tests
+    $H_0: \Prob(W_T^{(A)} > W_T^{(B)}) = 1/2$.
+\end{itemize}
+
+We report $p$-values and reject $H_0$ at the $\alpha = 0.05$ significance
+level throughout.

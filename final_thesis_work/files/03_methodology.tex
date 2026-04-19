@@ -1,0 +1,220 @@
+\chapter{Methodology}
+\label{ch:methodology}
+
+Our simulation framework models a stylized market environment in which agents
+repeatedly allocate resources.  This approach allows us to computationally
+test theoretical trade-offs under rigorous, repeatable conditions.
+
+% ---------------------------------------------------------------
+\section{The Stylized Market Environment}
+% ---------------------------------------------------------------
+
+We model the market as a filtered probability space
+$(\Omega, \Filt, \{\Filt_t\}, \Prob)$ (Definition~2.1) in which returns
+$r_t \mid S_t$ are drawn from one of $M$ regime-specific distributions.
+
+\subsection{Regime Configurations}
+
+Three synthetic environments are tested:
+
+\paragraph{Stationary.}  A single regime with
+$r_t \sim \Normal(\mu, \sigma^2)$, $\mu = 0.08$, $\sigma = 0.15$.
+This environment tests pure exploitation and validates the SLLN result of
+Theorem~\ref{thm:kelly_slln}.
+
+\paragraph{Adversarial Shock.}  A deterministic structural break at step
+$T_{\text{shock}} = T/2$: Bull market
+$r_t \sim \Normal(0.08, 0.15^2)$ for $t \leq T_{\text{shock}}$, then
+Bear market $r_t \sim t_3(-0.10, 0.30^2)$ (Student-$t$ with three degrees
+of freedom) for $t > T_{\text{shock}}$.  This tests robustness to sudden
+regime change and replicates the Kelly-Ruin Paradox.
+
+\paragraph{Slow Gaussian Drift.}  The mean drifts linearly:
+$\mu_t = \mu_0 + (\mu_1 - \mu_0) \cdot t / T$, with $\mu_0 = 0.08$ and
+$\mu_1 = -0.05$.  This tests the ability of agents to unlearn their prior
+gradually.
+
+\subsection{Common Random Numbers (CRN)}
+
+All agents in a given experiment are evaluated on the \emph{same} realized
+return matrix $\mathbf{R} \in \R^{N_{\text{sim}} \times T}$, generated once
+before any agent acts.  This is the Common Random Numbers (CRN) variance
+reduction technique (L'Ecuyer, 1994): by controlling for Monte Carlo noise,
+differences in terminal wealth between agents are attributable solely to
+strategy differences, not sampling variation.  Any comparison that violates
+CRN is statistically invalid.
+
+% ---------------------------------------------------------------
+\section{Decision Agents}
+% ---------------------------------------------------------------
+
+\subsection{Kelly Oracle (Benchmark)}
+
+The Oracle knows the true distribution parameters at every step and computes
+$f^* = \mu/\sigma^2$ (Equation~\eqref{eq:gaussian_kelly}).  It represents the
+theoretical upper bound on performance and is used to compute the \emph{oracle
+regret} $\mathcal{R}_t^{\text{oracle}} = \log W_t^{(f^*)} - \log W_t^{(\text{agent})}$
+plotted in the regret dynamics charts.
+
+\subsection{Naive Bayes Kelly}
+
+Maintains Beta posteriors $(\alpha_k, \beta_k)$ and plugs the posterior mean
+$\hat p_k = \alpha_k / (\alpha_k + \beta_k)$ directly into the Kelly formula.
+As formalized in Proposition~\ref{prop:sticky_prior}, this agent suffers
+$O(T_0)$ detection lag after a regime change because its posterior
+concentrates mass that resists reallocation.
+
+\subsection{Thompson Sampling Kelly}
+
+Samples $\tilde p_k \sim \text{Beta}(\alpha_k, \beta_k)$ and bets
+$f^*(\tilde p_k)$.  The Bayesian posterior variance acts as an implicit
+risk aversion: during the first $O(\sqrt{T})$ steps when variance is high,
+the sampled $\tilde p_k$ are dispersed, leading to lower average bets and
+thus lower early-stage ruin risk compared to the Naive plug-in.
+
+\subsection{UCB Agent}
+
+Uses the UCB1 rule (Theorem~\ref{thm:ucb_regret}) with the Kelly formula
+applied to the upper-confidence-bound estimate of each arm's win probability.
+
+\subsection{EXP3 Agent (Fractional Variant)}
+
+\footnote{See Remark~\ref{rem:exp3_variant} in Chapter~\ref{ch:foundations}.
+Our implementation is a continuous-fraction variant of EXP3 and does not
+satisfy the adversarial regret bound of Theorem~\ref{thm:exp3_regret}
+exactly; we use it as an adversarially-motivated heuristic rather than
+claiming the exact theoretical guarantee.}
+Maintains exponential weights $w_k$ updated via
+$w_k \leftarrow w_k \exp(\gamma \hat r_k / \Prob(k))$
+and allocates fractions proportional to the resulting mixing distribution.
+
+\subsection{Proposed Method 1: Volatility-Augmented HMM (Vol-HMM)}
+
+The Vol-HMM addresses the Sticky Prior Paradox through three mechanisms:
+
+\paragraph{Two-dimensional observation.}
+At each step, the agent observes $(r_t, v_t)$ where
+$v_t = \hat\sigma_{[t-W, t]}$ is the rolling standard deviation over a window
+$W = 5$.  Because $v_t$ spikes immediately when the market shifts from low-
+to high-volatility regimes, it provides an early-warning signal that the
+return alone cannot.
+
+\paragraph{Log-space forward algorithm.}
+Regime beliefs are maintained via Equation~\eqref{eq:forward_logspace}.
+The joint emission log-likelihood is
+\begin{equation}
+    \ln b_j(r_t, v_t) \;=\;
+    \ln \mathcal{N}(r_t;\,\mu_j,\,\sigma_j^2)
+    + \ln \Gam(v_t;\,k_j,\,\theta_j),
+    \label{eq:vol_hmm_emission}
+\end{equation}
+where $\mathcal{N}$ is the Gaussian density and $\Gam$ is the Gamma density.
+Emission parameters are specified a priori (Remark~\ref{rem:hmm_specified})
+as $(\mu_{\text{bull}}, \sigma_{\text{bull}}, k_{\text{bull}},
+\theta_{\text{bull}}) = (0.08, 0.15, 2.0, 0.075)$ and
+$(\mu_{\text{bear}}, \sigma_{\text{bear}}, k_{\text{bear}},
+\theta_{\text{bear}}) = (-0.10, 0.30, 4.0, 0.15)$.
+
+\paragraph{CUSUM change-point trigger.}
+In addition to the Bayes filter, a CUSUM statistic accumulates evidence of
+a negative mean shift:
+\begin{equation}
+    S_t^- \;=\; \max\!\bigl(0,\; S_{t-1}^- - z_t - k_{\text{drift}}\bigr),
+    \qquad z_t = (r_t - \mu_{\text{bull}}) / \sigma_{\text{bull}}.
+    \label{eq:cusum}
+\end{equation}
+When $S_t^- > h$ (threshold $h = 3.0$), a +2 log-likelihood bonus is added
+to the bear state emission, accelerating transition of belief mass.
+
+\paragraph{Transition constraint.}
+The transition matrix satisfies $A_{ii} \leq 0.95$ to prevent the sticky-
+prior effect from re-emerging through the transition dynamics.
+
+\paragraph{Bet sizing.}
+The bet fraction is $f_t = P(\text{bull} \mid \Filt_t) \cdot f^*_{\text{bull}}$,
+reducing exposure linearly as probability mass flows to the bear state.
+
+\subsection{Proposed Method 2: Risk-Constrained Kelly (CPPI)}
+
+\begin{definition}[CPPI Floor and Cushion]
+Let $\bar W_t = \max_{s \leq t} W_s$ be the running peak wealth.  The
+\emph{floor} is $F_t = (1 - D_{\max})\bar W_t$ and the \emph{cushion} is
+$C_t = W_t - F_t$.
+\end{definition}
+
+\begin{proposition}[CPPI Leverage Bound]
+\label{prop:cppi_bound}
+Under the leverage rule $\lambda_t = \min(1, m \cdot C_t / W_t)$ with
+$m > 0$, the wealth process satisfies
+\[
+    W_{t+1} \;\geq\; F_t \cdot \bigl(1 - m\,C_t\,r_{\min} / W_t\bigr),
+\]
+where $r_{\min}$ is the worst-case single-period return.  In continuous
+time (or discrete time with $|r_t| \leq m^{-1}$), this guarantees
+$W_t \geq F_t$ for all $t$, i.e., the drawdown never exceeds $D_{\max}$.
+\end{proposition}
+
+\begin{proof}
+The wealth update is
+$W_{t+1} = W_t(1 + \lambda_t r_t)$.
+With $\lambda_t = m C_t / W_t$ (ignoring the $\min$ cap),
+$W_{t+1} = W_t + m C_t r_t$.
+In the worst case $r_t = r_{\min} < 0$:
+$W_{t+1} = W_t + m C_t r_{\min} \geq F_t + C_t(1 + m r_{\min}) \geq F_t$
+provided $m |r_{\min}| \leq 1$.  The discrete-time caveat is that a single
+return $r_t < -1/m$ can breach the floor; this is noted in the experimental
+discussion.
+\end{proof}
+
+The CPPI agent does not use Bayesian updating of return parameters; it is a
+purely mechanical risk-control layer applicable to any underlying Kelly
+strategy.  We use the posterior mean as the base Kelly fraction and apply
+the CPPI leverage multiplier on top.
+
+% ---------------------------------------------------------------
+\section{Market Friction and Transaction Costs}
+% ---------------------------------------------------------------
+
+To bridge the gap between theoretical growth and empirical deployment, we
+model transaction costs at each step.  Given betting fraction $f_t$ and the
+\emph{drift-adjusted} previous fraction
+$\hat f_{t-1} = f_{t-1}(1+r_{t-1}) / (1 + f_{t-1} r_{t-1})$, the
+cost is applied to turnover:
+\begin{equation}
+    W_{t+1} \;=\; W_t \cdot \bigl(1 + f_t r_t - c\,|f_t - \hat f_{t-1}|\bigr),
+    \label{eq:friction}
+\end{equation}
+where $c$ is the friction in basis points ($\times 10^{-4}$).  We test
+$c \in \{0, 10, 25, 50, 100\}$ bps.  High-turnover agents (EXP3, UCB)
+rebalance aggressively and thus incur proportionally higher fees.
+
+% ---------------------------------------------------------------
+\section{Evaluation Metrics}
+% ---------------------------------------------------------------
+
+Strategies are evaluated against four complementary objectives:
+
+\begin{itemize}
+    \item \textbf{Median Terminal Wealth} $\tilde W_T$: The 50th percentile
+    of the terminal wealth distribution across $N_{\text{sim}}$ paths.  We
+    use the median rather than the mean because the distribution is
+    log-normal with a heavy right tail.
+
+    \item \textbf{Probability of Ruin}:
+    $\hat\rho = N_{\text{ruined}} / N_{\text{sim}}$, estimated via Monte
+    Carlo.  Statistical significance is assessed by Fisher's Exact Test
+    on the $2 \times 2$ contingency table of ruin/survival counts.
+
+    \item \textbf{Annualized Sharpe Ratio}:
+    $\mathcal{S} = (\bar R / \hat\sigma_R) \cdot \sqrt{252}$,
+    computed via the $O(T)$ running-statistics recursion
+    $\bar R_t = \bar R_{t-1} + (R_t - \bar R_{t-1})/t$.
+
+    \item \textbf{Annualized Sortino Ratio}:
+    $\mathcal{SOR} = (\bar R / \hat\sigma_{\downarrow}) \cdot \sqrt{252}$,
+    where $\hat\sigma_{\downarrow}^2 = \frac{1}{T}\sum_t \min(R_t, 0)^2$.
+\end{itemize}
+
+The cumulative \emph{Oracle Regret} $\log W_t^{(f^*)} - \log W_t^{(\text{agent})}$
+is plotted across time to reveal the dynamic rate at which each agent
+converges to or diverges from the growth-optimal benchmark.

@@ -1,0 +1,25 @@
+\chapter*{Notation Glossary}
+\addcontentsline{toc}{chapter}{Notation Glossary}
+
+This glossary outlines the standard notations utilized throughout the Bayesian sequential and CPPI methodologies.
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{p{0.15\textwidth} p{0.80\textwidth}}
+\hline
+\textbf{Symbol} & \textbf{Description} \\ \hline
+$W_t$ & Agent's total wealth at timestep $t$. \\
+$f_t$ & The fractional allocation (betting fraction) to the risky asset during $[t-1, t]$. \\
+$r_t$ & Realized return of the risky asset at time $t$. \\
+$\Filt_t$ & Information filtration available up to time $t$, technically $\sigma(r_1, \dots, r_t)$. \\
+$S_t$ & Hidden Markov state/regime at time $t$ where $S_t \in \{0=\text{Bull}, 1=\text{Bear}\}$. \\
+$A$ & Regime transition matrix where $A_{ij} = \Prob(S_t = j \mid S_{t-1} = i)$. \\
+$\alpha, \beta$ & Parameters of the Bayesian Beta posterior distribution for Bernoulli outcomes. \\
+$\mu_j, \sigma_j$ & Expected return and standard deviation conditioned on state $S_t = j$. \\
+$\nu$ & Degrees of freedom parameterizing the Student-t distribution heavy tails. \\
+$\lambda_t$ & CPPI dynamic leverage multiplier constraint $\lambda_t \in [0, 1]$. \\
+$D_t$ & Running maximum drawdown defined as $(W_{peak} - W_t) / W_{peak}$. \\
+\hline
+\end{tabular}
+\end{table}

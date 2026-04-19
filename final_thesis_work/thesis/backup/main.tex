@@ -1,0 +1,38 @@
+\documentclass[12pt,oneside]{book}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+% --- Custom Macros ---
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\Filt}{\mathcal{F}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\Gam}{\text{Gamma}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\R}{\mathbb{R}}
+
+\title{Bayesian Approaches to Sequential Decision-Making \\ in Uncertain Environments}
+\author{Ansh Dani}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\include{chapters/00_notation}
+\include{chapters/01_introduction}
+\include{chapters/02_foundations}
+\include{chapters/03_methodology}
+\include{chapters/04_experiments}
+\include{chapters/05_conclusion_future}
+
+\include{chapters/appendix_A_code}
+
+\end{document}

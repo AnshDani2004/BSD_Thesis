@@ -1,0 +1,114 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+Decision making under uncertainty is a central challenge in both theoretical
+and applied contexts, ranging from financial markets to artificial
+intelligence. Understanding how agents adapt their strategies when faced with
+noisy or incomplete information provides valuable insight into how learning
+and optimization unfold in dynamic environments. In particular, strategies
+that rely on probabilistic reasoning---such as Bayesian updating, the Kelly
+criterion, and multi-armed bandits---offer different ways of balancing risk
+and reward across time.
+
+%---------------------------------------------------------------
+\section{The Core Problem: Sticky Priors and Regime Change}
+%---------------------------------------------------------------
+
+Standard probability theory, as applied to sequential decision-making,
+assumes that the future resembles the past: the statistical properties of
+payoffs are stationary, and an agent's accumulated historical data is
+informative about what comes next. In equilibrium financial markets, this
+assumption is productive. In \emph{regime-changing} environments---markets
+experiencing a structural break, a crisis, or a volatility shock---the
+assumption breaks catastrophically.
+
+The failure mode is specific. A Bayesian agent that has accumulated 100
+observations from a bull market holds a posterior over the payoff probability
+that is tightly concentrated near the bull-regime mean. When a bear regime
+begins, the agent's new observations from the bear regime must overcome
+the inertia of those 100 bull-regime observations before the posterior
+shifts materially. We term this the \emph{Sticky Prior Paradox}: the
+strength of historical evidence, which is a virtue in stationary environments,
+becomes a liability under regime change.
+
+%---------------------------------------------------------------
+\section{Research Objectives}
+%---------------------------------------------------------------
+
+The primary objective is to develop a simulation framework that acts as a
+rigorous testbed for sequential decision-making strategies under both
+stationary and non-stationary conditions. Concretely, we evaluate:
+
+\begin{enumerate}
+    \item How the exploration versus exploitation dilemma manifests when
+    agents must size continuous bet fractions rather than choose among
+    discrete actions.
+
+    \item The trade-off between maximising long-term wealth (Full Kelly)
+    and maximising the probability of reaching a short-term target while
+    avoiding ruin (Fractional Kelly or CPPI).
+
+    \item The robustness---or fragility---of standard Bayesian updating
+    frameworks when faced with non-stationary, regime-switching payoffs,
+    with Student-$t$ heavy tails.
+
+    \item Whether a Volatility-Augmented HMM can materially reduce
+    regime-detection latency, and at what cost in terms of foregone
+    growth.
+
+    \item The transaction cost sensitivity of different algorithmic
+    strategies, quantifying the ``net-of-fees'' cost of survival.
+\end{enumerate}
+
+%---------------------------------------------------------------
+\section{Contributions}
+%---------------------------------------------------------------
+
+This thesis makes the following contributions:
+
+\begin{enumerate}
+    \item \textbf{A unified simulation framework} that evaluates eight
+    sequential decision-making agents under Common Random Numbers, ensuring
+    statistically valid comparisons across three synthetic and four
+    empirical market regimes.
+
+    \item \textbf{Volatility-Augmented HMM (Vol-HMM)}: A two-dimensional
+    HMM Bayesian filter that augments return observations with rolling
+    volatility and incorporates a CUSUM change-point detector, reducing
+    empirical regime-detection lag from 15--20 steps to under 2 steps.
+
+    \item \textbf{Risk-Constrained Kelly (CPPI)}: A CPPI-style drawdown
+    floor enforcement that achieves zero ruin in tested scenarios, with
+    an explicit quantification of the growth cost of the protection.
+
+    \item \textbf{Transaction Cost Analysis}: Empirical demonstration that
+    high-turnover agents incur disproportionate fee drag, motivating
+    regime-aware allocation that reduces rebalancing frequency.
+\end{enumerate}
+
+%---------------------------------------------------------------
+\section{Methodological Overview}
+%---------------------------------------------------------------
+
+This work bridges Bayesian statistical modeling with stochastic processes and
+computational experimentation. Under the guidance of Professor Shiwei Lan,
+the project emphasises Bayesian inference and posterior calibration. Professor
+Nicolas Lanchier's expertise on probabilistic foundations and filtration
+theory informs the rigorous measure-theoretic setup in
+Chapter~\ref{ch:foundations}. By comparing simulation results with
+theoretical expectations, the thesis constructs a comprehensive understanding
+of adaptive probabilistic decision systems.
+
+%---------------------------------------------------------------
+\section{Thesis Outline}
+%---------------------------------------------------------------
+
+The remainder of the thesis is organised as follows.
+Chapter~\ref{ch:literature} reviews the relevant literature on Kelly
+criterion theory, Bayesian bandits, Hidden Markov Models, and portfolio
+insurance. Chapter~\ref{ch:foundations} establishes the formal mathematical
+framework. Chapter~\ref{ch:methodology} describes the simulation environment,
+all agents, and the two proposed methods with their formal guarantees.
+Chapter~\ref{ch:experiments} presents experimental results and sensitivity
+analyses. Chapter~\ref{ch:conclusion} (the conclusion chapter) synthesises
+the findings and outlines future directions.

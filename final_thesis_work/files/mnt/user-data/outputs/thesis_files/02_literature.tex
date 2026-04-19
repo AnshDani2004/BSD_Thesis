@@ -1,0 +1,245 @@
+\chapter{Literature Review}
+\label{ch:literature}
+
+This chapter surveys the key intellectual traditions this thesis draws upon:
+optimal growth theory under uncertainty, Bayesian inference in sequential
+settings, multi-armed bandit algorithms, Hidden Markov Models for financial
+regime detection, and portfolio insurance mechanisms. Where relevant, we
+identify the specific limitations of each body of work that motivate our
+proposed extensions.
+
+%---------------------------------------------------------------
+\section{The Kelly Criterion and Optimal Growth Theory}
+%---------------------------------------------------------------
+
+The foundational result in optimal betting theory is due to
+\textcite{kelly1956new}, who considered a gambler receiving a noisy binary
+signal and asked: what fraction of wealth should be wagered each round to
+maximize long-run wealth? Kelly showed that the answer is to maximize the
+expected logarithm of wealth, yielding the celebrated formula
+\[
+    f^* = \frac{bp - q}{b},
+\]
+where $p$ is the probability of winning, $q = 1-p$, and $b$ is the net odds.
+The key insight is that log-utility is the unique utility function consistent
+with asymptotically maximal wealth accumulation---any other utility leads to
+eventual underperformance relative to Kelly betting in the long run.
+
+The theoretical optimality of Kelly was made precise by \textcite{breiman1961},
+who proved that the Kelly bettor almost surely accumulates more wealth than any
+other essentially different strategy as the horizon $T \to \infty$. This
+result, a direct consequence of the Strong Law of Large Numbers (SLLN) for
+log-returns, forms the theoretical backbone of Chapter~\ref{ch:foundations}.
+
+A major intellectual challenge to Kelly came from \textcite{samuelson1979},
+who argued forcefully that log-utility is not intrinsically special and that
+risk-averse investors with different utility functions should not follow Kelly.
+The ``Samuelson--Kelly debate'' remains live in the portfolio management
+literature. This thesis sides with the empirical tradition: we use Kelly as a
+theoretical benchmark whose optimality holds under its stated assumptions, and
+we study what happens when those assumptions---stationarity, correct probability
+estimates---are violated.
+
+For continuous return distributions, the Kelly fraction generalizes to
+$f^* = \mu / \sigma^2$ when returns are drawn from $\Normal(\mu, \sigma^2)$,
+a result obtained by maximizing $\E[\log(1 + fR)]$ for $R \sim \Normal(\mu,
+\sigma^2)$ with respect to $f$ (see, e.g., \textcite{thorp2008}). This
+continuous-distribution form is used throughout our simulation framework.
+
+%---------------------------------------------------------------
+\section{Bayesian Updating and the Sticky Prior Problem}
+%---------------------------------------------------------------
+
+Bayesian sequential decision-making treats parameter uncertainty as a
+probability distribution over hypotheses that is updated as data arrives.
+The canonical treatment for binary outcomes uses a Beta-Binomial conjugate
+model: a prior $\text{Beta}(\alpha_0, \beta_0)$ is updated by observed
+successes and failures to yield the posterior
+$\text{Beta}(\alpha_0 + s, \beta_0 + f)$, where $s$ and $f$ count successes
+and failures respectively \parencite{degroot1970}.
+
+The well-known problem with Bayesian updating in \emph{non-stationary}
+environments is that the posterior becomes increasingly concentrated around the
+historical frequency as more data accumulates, making it progressively harder
+to shift beliefs in response to a genuine structural change. We term this the
+\emph{Sticky Prior Problem}: the weight of past evidence overwhelms the
+evidence from a regime change, causing the posterior mean to ``stick'' near its
+pre-change value for $O(\sqrt{n})$ additional observations. This phenomenon
+is related to the concept of \emph{Bayesian regret} in non-stationary bandit
+problems studied by \textcite{besbes2014stochastic}.
+
+%---------------------------------------------------------------
+\section{Multi-Armed Bandits: Exploration vs.\ Exploitation}
+%---------------------------------------------------------------
+
+The Multi-Armed Bandit (MAB) problem, formalized by \textcite{robbins1952},
+provides the canonical framework for sequential decision-making under
+uncertainty. An agent faces $K$ arms with unknown reward distributions and
+must decide at each step which arm to pull so as to maximize cumulative
+reward---balancing \emph{exploitation} of the currently best-known arm with
+\emph{exploration} of potentially better alternatives.
+
+\subsection{Upper Confidence Bound (UCB) Algorithms}
+
+\textcite{auer2002finite} proved that the UCB1 algorithm achieves
+$O(\log T)$ cumulative regret in the stochastic MAB setting. The algorithm
+selects the arm $i$ with the highest index
+\[
+    \bar{\mu}_i(t) + \sqrt{\frac{2\ln t}{n_i(t)}},
+\]
+where $\bar{\mu}_i(t)$ is the empirical mean reward of arm $i$ and $n_i(t)$
+is the number of times it has been pulled. The exploration bonus
+$\sqrt{2\ln t / n_i}$ decays as an arm is pulled more frequently,
+automatically balancing exploration and exploitation. This logarithmic regret
+bound is known to be minimax optimal \parencite{lattimore2020bandit}.
+
+\subsection{Thompson Sampling}
+
+Thompson Sampling, introduced by \textcite{thompson1933likelihood}, maintains
+a Bayesian posterior over arm reward probabilities and at each step samples
+one parameter vector from the posterior, then selects the arm that appears
+best under the sampled parameter. Despite its simplicity, Thompson Sampling
+achieves $O(\log T)$ regret with favourable empirical constants
+\parencite{agrawal2012analysis, russo2018tutorial}. Its Bayesian nature makes
+it naturally suited to the Kelly betting context: the sampled probability
+$\tilde{p}$ is used directly in the Kelly formula $f^*(\tilde{p})$, which
+automatically reduces leverage when posterior uncertainty is high.
+
+\subsection{EXP3 for Adversarial Environments}
+
+When the reward sequence can be chosen adversarially---with no stochastic
+structure---the standard UCB and Thompson Sampling regret bounds no longer
+hold. \textcite{auer2002nonstochastic} introduced EXP3 (Exponential-weight
+algorithm for Exploration and Exploitation), which maintains a probability
+distribution over arms updated by exponential re-weighting:
+\[
+    w_i(t+1) = w_i(t) \cdot \exp\!\Bigl(\frac{\gamma \hat{r}_i(t)}{K}\Bigr),
+\]
+where $\hat{r}_i(t) = r_i(t)/p_i(t)$ is an importance-weighted reward
+estimate and $\gamma$ is an exploration parameter. EXP3 achieves
+$O(\sqrt{KT\ln K})$ regret against the best fixed arm in hindsight, with no
+assumption on the reward generating process. Our implementation adapts EXP3
+to continuous fractional betting; deviations from the canonical algorithm
+are discussed in Section~\ref{sec:agents}.
+
+%---------------------------------------------------------------
+\section{Hidden Markov Models for Regime Detection}
+%---------------------------------------------------------------
+
+Hidden Markov Models (HMMs) were introduced to the statistics literature by
+\textcite{baum1966statistical} and brought to prominence in time-series
+econometrics by \textcite{hamilton1989new}, who used a two-state HMM to
+model business cycle regime switching in GDP growth. The model posits that
+an observed sequence $\{r_t\}$ is driven by an unobserved Markov chain
+$\{S_t\}$ with transition matrix $A$, where each state $S_t = j$ emits
+observations according to a regime-specific distribution $b_j(\cdot)$.
+
+Inference over the hidden state is performed by the forward algorithm, which
+computes the filtered probability
+\[
+    \alpha_t(j) = \Prob(S_t = j \mid r_1, \ldots, r_t),
+\]
+using the recursion
+\[
+    \alpha_t(j) = b_j(r_t) \sum_{i} \alpha_{t-1}(i) A_{ij}.
+\]
+We implement this recursion in log-space (using \texttt{logsumexp}) to
+prevent numerical underflow over long sequences---a critical engineering
+concern for $T > 250$ steps with float64 arithmetic.
+
+A key limitation of standard HMMs is precisely the sticky prior problem
+identified above: if the transition matrix is estimated from historical data
+with high persistence (e.g., $A_{ii} \approx 0.99$), the model is slow to
+assign probability to a regime change even when new evidence strongly suggests
+one has occurred. Our Vol-HMM addresses this by (i) capping $A_{ii} \leq
+0.95$ and (ii) augmenting the scalar return observation with a rolling
+volatility feature, increasing the discriminative power of each observation.
+
+The use of volatility as a regime indicator has empirical support from the
+financial literature. \textcite{ang2002regime} show that the equity
+risk premium is strongly counter-cyclical and that high-volatility regimes
+predict low subsequent returns, validating the informational content of
+volatility as a regime signal.
+
+%---------------------------------------------------------------
+\section{CUSUM Change-Point Detection}
+%---------------------------------------------------------------
+
+The Cumulative Sum (CUSUM) procedure, introduced by \textcite{page1954},
+is a classical sequential test for detecting a shift in the mean of a
+process. Given standardised observations $z_t = (r_t - \mu_0)/\sigma_0$,
+the one-sided CUSUM statistic is
+\[
+    S_t^- = \max(0,\, S_{t-1}^- - z_t - k),
+\]
+where $k > 0$ is a drift parameter. An alarm is raised when $S_t^- >
+h$ for some threshold $h$. CUSUM has optimal average run length properties
+among all sequential tests for detecting a mean shift of a specified
+magnitude \parencite{moustakides1986optimal}. We combine CUSUM with the HMM
+forward algorithm to create a hybrid detector: CUSUM provides a rapid,
+distribution-free alarm, while the HMM provides probabilistic regime
+attribution.
+
+%---------------------------------------------------------------
+\section{Portfolio Insurance and CPPI}
+%---------------------------------------------------------------
+
+Constant Proportion Portfolio Insurance (CPPI) was introduced by
+\textcite{black1987simplifying} as a dynamic strategy that maintains a floor
+on wealth. The agent computes a ``cushion'' $C_t = W_t - F_t$ where $F_t$ is
+a floor (often set as a fraction of peak wealth), and invests $m \cdot C_t$
+in the risky asset, where $m > 1$ is a multiplier. In continuous time, CPPI
+guarantees $W_t \geq F_t$ for all $t$; in discrete time, a single large
+negative return can cause the cushion to turn negative (a ``gap risk'').
+
+\textcite{busseti2016risk} extend the CPPI framework to the Kelly setting,
+showing how a risk budget constraint on maximum drawdown can be incorporated
+into the Kelly optimisation problem as a convex constraint. Our
+\texttt{RiskConstrainedKelly} implementation follows their architecture,
+using a trailing peak drawdown constraint $D_t = (W_{\text{peak}} -
+W_t)/W_{\text{peak}} \leq D_{\max}$ with CPPI-style leverage
+$\lambda_t = \min(1, m \cdot C_t / W_t)$.
+
+%---------------------------------------------------------------
+\section{Heavy Tails in Financial Returns}
+%---------------------------------------------------------------
+
+Empirical stock returns are well-documented to exhibit excess kurtosis
+(``fat tails'') inconsistent with the Gaussian distribution assumed by
+standard financial models. \textcite{mandelbrot1963variation} first
+documented this for cotton prices, and the result has been replicated
+extensively \parencite{cont2001empirical}. Practically, this means that
+extreme events (e.g., daily moves of 5--10 standard deviations) occur far
+more frequently than Gaussian models predict.
+
+For the Kelly criterion, heavy tails are particularly dangerous: if an agent
+sizes its position based on a Gaussian estimate of $\sigma$ but the true
+distribution has heavier tails, there is a nonzero probability of a single
+return $r_t$ satisfying $1 + f r_t \leq 0$---i.e., instantaneous ruin. Our
+Experiment 6 (Section~\ref{ch:experiments}) demonstrates this
+\emph{Kelly-Ruin Paradox} computationally by comparing ruin rates under
+Gaussian versus Student-$t(\nu=3)$ return models using an identical Kelly
+fraction calibrated to the Gaussian.
+
+%---------------------------------------------------------------
+\section{Summary of Identified Gaps}
+%---------------------------------------------------------------
+
+The literature reveals three specific gaps that this thesis addresses:
+
+\begin{enumerate}
+    \item \textbf{No filtration-consistent Kelly MAB framework.} Existing
+    bandit algorithms are not designed with the log-utility objective, and
+    existing Kelly implementations do not handle the MAB exploration problem.
+    We bridge this gap via the Thompson-Kelly and UCB-Kelly agents.
+
+    \item \textbf{Standard HMMs are too slow for adversarial regime changes.}
+    The high persistence typically estimated in HMM transition matrices causes
+    the sticky prior problem. We address this with the Vol-HMM's constrained
+    transition matrix and CUSUM augmentation.
+
+    \item \textbf{Kelly theory ignores finite-time ruin under fat tails.}
+    Asymptotic optimality is irrelevant if the agent is ruined before the law
+    of large numbers kicks in. We address this with the CPPI drawdown floor,
+    quantifying the cost of this protection in terms of foregone growth.
+\end{enumerate}

@@ -27,3 +27,18 @@ Starting Thesis Simulation API on port 5001...
 127.0.0.1 - - [15/Apr/2026 20:44:52] "POST /api/simulate/compare HTTP/1.1" 200 -
 127.0.0.1 - - [15/Apr/2026 20:54:27] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
 127.0.0.1 - - [15/Apr/2026 20:54:28] "POST /api/simulate/compare HTTP/1.1" 200 -
+ * Detected change in '/Users/ansh/Developer/bayesian-sequential-decisions-thesis/final_thesis_work/experiments/plot_engine.py', reloading
+Starting Thesis Simulation API on port 5001...
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 112-965-402
+127.0.0.1 - - [17/Apr/2026 07:41:24] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [17/Apr/2026 07:43:03] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+127.0.0.1 - - [17/Apr/2026 07:43:03] "OPTIONS /api/simulate/compare HTTP/1.1" 200 -
+Numba workqueue threading layer is terminating: Concurrent access has been detected.
+
+ - The workqueue threading layer is not threadsafe and may not be accessed concurrently by multiple threads. Concurrent access typically occurs through a nested parallel region launch or by calling Numba parallel=True functions from multiple Python threads.
+ - Try using the TBB threading layer as an alternative, as it is, itself, threadsafe. Docs: https://numba.readthedocs.io/en/stable/user/threading-layer.html
+
+/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/multiprocessing/resource_tracker.py:216: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
