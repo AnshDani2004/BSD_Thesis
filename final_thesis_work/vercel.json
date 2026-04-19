@@ -1,17 +1,22 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "dashboard/frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "https://honorsthesis-hbnw.onrender.com/api/$1"
     },
     {
-      "source": "/(.*)",
-      "destination": "/dashboard/frontend/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/dashboard/frontend/index.html"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
