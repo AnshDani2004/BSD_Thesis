@@ -58,6 +58,14 @@ def generate_timestamps(t_steps):
     return [(base + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(t_steps)]
 
 
+@app.route('/')
+def home():
+    return jsonify({
+        "status": "online",
+        "message": "Bayesian Sequential Decision-Making Backend Live",
+        "version": "1.0.0"
+    })
+
 @app.route('/api/simulate/compare', methods=['POST'])
 def simulate_compare():
     data = request.json or {}
