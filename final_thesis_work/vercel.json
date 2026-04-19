@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
-    },
-    {
       "src": "dashboard/frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -13,18 +9,10 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "https://honorsthesis-hbnw.onrender.com/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "dashboard/frontend/dist/$1",
-      "check": true
+      "source": "/api/(.*)",
+      "destination": "https://honorsthesis-hbnw.onrender.com/api/$1"
     }
-  ],
-  "env": {
-    "PYTHON_VERSION": "3.9"
-  }
+  ]
 }
