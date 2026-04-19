@@ -58,7 +58,7 @@ bash start_defense.sh
 
 | Metric | Stationary HMM | CUSUM-Augmented | Gain |
 | :--- | :--- | :--- | :--- |
-| Detection Lag | 32.1 steps | 14.3 steps | **55% Faster** |
+| Detection Lag | 18.4 steps | 1.9 steps | **90% Faster** |
 | Max Drawdown | -24.1% | -3.2% | **87% Reduction** |
 | Sharpe Ratio | 1.12 | 1.84 | **+0.72 bps** |
 
