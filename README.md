@@ -1,6 +1,6 @@
 # Bayesian Sequential Decision-Making under Regime Switches
 
-**A Senior Thesis in Quantitative Finance & Machine Learning**
+**Honors Thesis in Quantitative Finance & Machine Learning**
 
 This repository contains the full implementation of a Bayesian Sequential Decision-Making framework designed to optimize portfolio performance in non-stationary market environments. The project combines Hidden Markov Models (HMM), CUSUM change-point detection, and a real-time React analytics dashboard.
 
