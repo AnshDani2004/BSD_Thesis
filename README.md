@@ -65,5 +65,5 @@ bash start_defense.sh
 ---
 
 **Author**: Ansh Dani  
-**Thesis Advisor**: [TBD]  
-**Institution**: [TBD]
+**Thesis Committee**: Dr. Shiwei Lan (Thesis Director) and Dr. Nicolas Lanchier (Second Reader)  
+**Institution**: School of Mathematics and Statistical Sciences, Arizona State University
