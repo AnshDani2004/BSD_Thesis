@@ -1,0 +1,15 @@
+Running Experiment 6: The Kelly-Ruin Paradox in Fat Tails
+
+Market Dynamics: μ=0.08, σ=0.15
+Calculated optimal (Gaussian) Kelly fraction: 0.41
+
+Simulating agent allocating Gaussian Kelly fraction in both realities:
+Environment Base                       | Prob of Ruin
+-----------------------------------------------------
+Gaussian Environment                   |       0.0%
+Heavy-Tailed (Student-t) Environment   |      11.7%
+
+Result: Demonstrated the Kelly-Ruin Paradox.
+When real-world probability distributions exhibit high kurtosis, continuous
+Gaussian heuristics mathematically guarantee ruin over long sequences.
+
