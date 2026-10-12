@@ -1,7 +1,7 @@
 # PREREG: Extension 2 of the honors thesis (detector ablation, CPPI gap risk, bounded returns)
 
-Status: version 1, written and committed before any exploratory or confirmatory computation of the
-outcomes below (only fidelity smoke checks on test seeds 900000 to 900999 had been run). It is frozen by
+Status: frozen (amendments 1 to 5 below). Version 1 was written and committed (a5ebfc0) before any
+exploratory or confirmatory computation of the outcomes below (only fidelity smoke checks on test seeds 900000 to 900999 had been run). It is frozen by
 the commit whose message starts with `FREEZE ext2`; the confirmatory run happens once, after that commit,
 on the confirmatory seeds only. Changes after version 1 are listed in the amendment log (section 11).
 
@@ -184,7 +184,8 @@ Agent variants (CPPI_SPEC.md sections 10 and 11): V1_code (the thesis agent, lam
 V2_pure (lambda in [0, 0.50]). Grid: n rebalances per step in {1, 2, 5, 10, 50}; m in {1, 2, 3, 5}.
 Peak tracking (amendment 2): primary `peak_step` (peak updated at step ends only, exposure rebalanced n
 times); secondary `peak_every` (peak updated at every rebalance). Diagnostic (amendment 2): for each
-breaching path, whether lambda sat at its minimum (or the cushion was <= 0) in the first breaching step.
+breaching path, whether lambda sat at its minimum (or the cushion was <= 0) at the start of the rebalance
+interval in which wealth first ended below 80% of the step-grid peak, within the first breaching step.
 Breach (primary outcome): wealth on the step-end grid falls more than 20% below its running peak
 (CPPI_SPEC.md section 8). Secondary: breach on the fine grid (all 50 substeps per step, against the
 fine-grid running peak), median terminal wealth, maximum drawdown. Comparison: V1_code at n = 1 for each m
@@ -261,3 +262,5 @@ for the CPPI; (iii) realised confirmatory false-alarm rates versus the targets.
 | 1 | 2026-10-12 | Outcome a downstream: add the same alarms and bets on the unbounded model (r = x) as a labelled comparison. | Exploratory run: under the bounded model "always in" had the highest median terminal wealth (120.9) and the oracle-timing benchmark did not beat it (119.0), so detection has almost no wealth value there; the comparison shows whether that is a property of the bounded model. | yes, exploratory seeds 0 to 999 |
 | 2 | 2026-10-12 | Outcome b: primary breach analysis uses `peak_step` tracking (peak updated at step ends only; exposure rebalanced n times); the originally specified `peak_every` version becomes secondary. Add the lambda-at-minimum breach diagnostic. | Exploratory run: with `peak_every`, the jump-DGP negative control still showed a strong n effect (b1 = -0.42, V1 breach at m = 3 from 0.624 at n = 1 to 0.234 at n = 50) because the agent sees intra-step highs and raises its floor. A quick exploratory diagnostic with `peak_step` gave V1 0.624 to 0.586 (diffusive) and V2 0.088 to 0.007 (diffusive), 0.088 to 0.085 (jump). So `peak_every` mixes "rebalance exposure more often" with "track a higher floor"; only `peak_step` isolates the first, which is what the gap-risk prediction is about. Under version 1 the V1 decision was SUPPORTED on exploratory seeds; this change is expected to make it less favourable. | yes, exploratory seeds 0 to 999 |
 | 3 | 2026-10-12 | Add `bear_log_growth.py` (deterministic quadrature of E[log(1 + f r)] per regime) as context. | Exploratory finding: under the bounded log-Student-t model every regime has positive expected log growth for small enough bets (E[exp(x)] is infinite for Student-t x), e.g. the thesis bear has Kelly fraction 0.072 in [0, 1] with growth +0.0022 per step, so "go to cash in the bear" is never Kelly-optimal under the bounded model. | analytic, no seeds |
+| 4 | 2026-10-12 | The lambda-at-minimum diagnostic records the interval in which wealth first ended below 80% of the step-grid peak (not any interval of the breaching step). | Exploratory run 2 showed V2_pure (minimum 0) flagged "at minimum" on all n = 50 breaches, an artifact of intervals after the crossing (cushion already <= 0). Diagnostic only; breach outcomes unchanged. | yes, exploratory seeds 0 to 999 |
+| 5 | 2026-10-12 | FREEZE. Thresholds in `results/exploratory/thresholds.json` (tuned on exploratory seeds 0 to 999, identical in exploratory runs 1 and 2) are final. Confirmatory run on seeds 100000 to 101999, once. | | |

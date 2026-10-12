@@ -16,8 +16,9 @@ Returns a dict of per-path arrays:
     breach_step  W_t < 0.8 * max_{s<=t} W_s on the step-end grid t = 0..T (CPPI_SPEC.md section 8)
     breach_fine  the same on every fine point (K per step), against the fine-grid running peak
     mdd_step  maximum drawdown on the step-end grid
-    first_breach_lambda_at_min  1 if lambda sat at l_min (or the cushion was <= 0) in some rebalance interval
-           of the first step that ended in a step-grid breach, 0 if not, -1 if no breach (diagnostic)
+    first_breach_lambda_at_min  for the first step that ends in a step-grid breach: 1 if lambda sat at l_min
+           (or the cushion was <= 0) at the start of the first rebalance interval of that step whose end
+           wealth was below 0.8 x the step-grid peak, 0 if not, -1 if no breach (diagnostic)
 """
 import math
 import numpy as np
@@ -44,7 +45,7 @@ def _cppi_path(Y, n_reb, m, l_min, l_max, d_max, fdet, has_fdet, use_cppi, peak_
     lam_min_hit = False      # lambda clipped at l_min in the current step
     first_at_min = -1.0      # 1 if lambda was at l_min in some interval of the first breaching step, 0 if not
     for t in range(T):
-        lam_min_hit = False
+        cross_flag = -1.0    # lambda-at-min flag of the first interval this step ending below 0.8 * peak_step
         if has_fdet:
             fb = fdet[t]
         else:
@@ -59,18 +60,20 @@ def _cppi_path(Y, n_reb, m, l_min, l_max, d_max, fdet, has_fdet, use_cppi, peak_
             if use_cppi:
                 F = P * (1.0 - d_max)
                 C = W - F
+                at_min = False
                 if C <= 0.0:
                     lam = l_min
-                    lam_min_hit = True
+                    at_min = True
                 else:
                     lam = m * C / W
                     if lam <= l_min:
                         lam = l_min
-                        lam_min_hit = True
+                        at_min = True
                     if lam > l_max:
                         lam = l_max
             else:
                 lam = l_max
+                at_min = False
             f = lam * fb
             if f > 1.0:
                 f = 1.0
@@ -96,6 +99,8 @@ def _cppi_path(Y, n_reb, m, l_min, l_max, d_max, fdet, has_fdet, use_cppi, peak_
                     W = math.exp(logW)
                     if W < min_w:
                         min_w = W
+                    if cross_flag < 0.0 and W < (1.0 - d_max) * peak_step:
+                        cross_flag = 1.0 if at_min else 0.0
                     if peak_every and W > P:
                         P = W
         # step end
@@ -113,7 +118,7 @@ def _cppi_path(Y, n_reb, m, l_min, l_max, d_max, fdet, has_fdet, use_cppi, peak_
             mdd = dd
         if W < (1.0 - d_max) * peak_step:
             if not br_step:
-                first_at_min = 1.0 if lam_min_hit else 0.0
+                first_at_min = cross_flag
             br_step = True
     res[0] = W
     res[1] = min_w

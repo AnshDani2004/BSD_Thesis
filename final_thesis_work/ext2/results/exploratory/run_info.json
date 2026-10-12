@@ -1,0 +1,17 @@
+{
+ "phase": "exploratory",
+ "git_head": "94d8cb8a42bc8638959d71e244e34d1da09c9675",
+ "git_branch": "ext2-ablation",
+ "python": "3.10.13",
+ "numpy": "2.2.6",
+ "numba": "0.63.1",
+ "seeds": [
+  0,
+  999,
+  1000
+ ],
+ "parts": [
+  "b"
+ ],
+ "runtime_s": 26.7
+}
