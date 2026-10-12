@@ -6,34 +6,34 @@
     },
     "agents": {
         "Vol-HMM (Proposed)": {
-            "median_wealth": 3019.6824634642535,
+            "median_wealth": 3019.68246346426,
             "ruin_risk": 0.0,
-            "max_wealth": 152469.49032117354
+            "max_wealth": 152469.49032117327
         },
         "Risk-Constrained CPPI": {
-            "median_wealth": 34.91886411055874,
+            "median_wealth": 31.368983489481607,
             "ruin_risk": 0.0,
-            "max_wealth": 1447.4743643335025
+            "max_wealth": 1260.887242747521
         },
         "Thompson Sampling": {
-            "median_wealth": 1012.0048783383924,
+            "median_wealth": 900.8618110998257,
             "ruin_risk": 0.0,
-            "max_wealth": 1038291.8165092589
+            "max_wealth": 1149877.8491419305
         },
         "EXP3": {
-            "median_wealth": 7944.9436186313915,
+            "median_wealth": 7944.943618631398,
             "ruin_risk": 0.0,
-            "max_wealth": 189655.3526680256
+            "max_wealth": 189655.35266802594
         },
         "Naive Bayes": {
-            "median_wealth": 909.5071926922119,
+            "median_wealth": 909.50719269221,
             "ruin_risk": 0.0,
-            "max_wealth": 1139905.474004647
+            "max_wealth": 1139905.4740046512
         },
         "Softmax": {
-            "median_wealth": 1257.3141049221754,
+            "median_wealth": 1257.3141049221763,
             "ruin_risk": 0.0,
-            "max_wealth": 2111300.225970785
+            "max_wealth": 2111300.225970804
         }
     }
 }

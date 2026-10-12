@@ -160,7 +160,11 @@ def simulate_compare():
                 f = agent.act()[0]
                 r = returns_matrix[sim, t]
                 tracker.update(f, r)
-                agent.update(np.array([r]))
+                # CPPI needs the realized wealth to move its floor (audit fix, 2026-10-12)
+                if isinstance(agent, RiskConstrainedKelly):
+                    agent.update(np.array([r]), wealth=tracker.wealth)
+                else:
+                    agent.update(np.array([r]))
                 sim_wealth_path.append(tracker.wealth)
                 
             state = tracker.get_state()

@@ -42,7 +42,11 @@ def run_experiment(name, returns_matrix, t_steps, n_sims, oracle_f_path):
                 f = agent.act()[0]
                 r = returns_matrix[sim, t]
                 tracker.update(f, r)
-                agent.update(np.array([r]))
+                # CPPI needs the realized wealth to move its floor (audit fix, 2026-10-12)
+                if isinstance(agent, RiskConstrainedKelly):
+                    agent.update(np.array([r]), wealth=tracker.wealth)
+                else:
+                    agent.update(np.array([r]))
                 sim_path.append(tracker.wealth)
                 
                 # Oracle Math
