@@ -1,0 +1,51 @@
+{
+ "phase": "confirmatory",
+ "git_head": "a8bd9ff0535427652e87f1c136b347daee13c481",
+ "git_branch": "ext2-ablation",
+ "python": "3.10.13",
+ "numpy": "2.2.6",
+ "numba": "0.63.1",
+ "seeds": [
+  100000,
+  101999,
+  2000
+ ],
+ "parts": [
+  "a",
+  "b",
+  "c"
+ ],
+ "a": {
+  "0.95": {
+   "prebreak_sha256": {
+    "hmm_ret": "7a6744a7a982bae2a5657b9baae93501546ba48fe7154416f42cb423909b965c",
+    "volhmm": "9a0ed4dda6612f19597edf7bf890eaef215f86d298e38e01a5d3ea71ee4a9fd0",
+    "volhmm_cusum": "43d897ced32de7ae14706409c616a4463cc48f2744fefd400fcb4d5c36f6f454",
+    "bocpd_rl": "934f8e7074b0d9193162ce52bc74c79d6df63e8427b83962dd269d773b7c1809",
+    "bocpd_mean": "0cee6d3e73bc7ba1e51521fd30555a551cde881bc3c20a9cb60ad734a8fb666c",
+    "jm": "6e3aef8ef710e16d24bcb94831550e39afa1ab20ed104526f3702ca9758aa775"
+   }
+  },
+  "0.97": {
+   "prebreak_sha256": {
+    "hmm_ret": "8cbec2a026443ca0e7e82af3bd5b014ee5bd4d3ad64e406ffbdb03da2049d4f7",
+    "volhmm": "3847c3bb60acd38dfed6ed38c1934ff8b8b70bd3fb3b2e6becafb4896f133f54",
+    "volhmm_cusum": "15f240c8aa1926af1d1ace8e35e1e5436c89ae98653b408c5674ef99124099cd",
+    "bocpd_rl": "71a5075f2dc4ea0874aa0a050cea4b15edbcbe01b411dfd7b41ab93c0c94488c",
+    "bocpd_mean": "a8bf3058cbabe1a4c621993aef1b71b2c7ab63c50fc24c7f25c952eddd422ac2",
+    "jm": "8db493e698aa6c1802719883c21e588dcd39a2a644211010ebc37913db3ac4c8"
+   }
+  },
+  "0.99": {
+   "prebreak_sha256": {
+    "hmm_ret": "4d82ed02af8af7db9a1b950147160cac8e1760842793290b1a12a7b1c8182dc0",
+    "volhmm": "f9c9731b47d2c594254c6e9b7dc274aa2fe96898f55699963d643f70ed07a47f",
+    "volhmm_cusum": "9f213d24c06e0166f7704106461987ac62ee27d0cac04a14020e2915e0e7bb21",
+    "bocpd_rl": "635794d512d6e178d5f96bd7cc70352015dda145e628a3360bc80b14d6e217c5",
+    "bocpd_mean": "086295d674d0f6dd02e05e0a8a4652e6036c376210baa8f03b0ffbc34dfd09d4",
+    "jm": "918e14d6f6029f3cb938be8bdd7ca570c3272fb05de9261b967891105af9b726"
+   }
+  }
+ },
+ "runtime_s": 1181.9
+}

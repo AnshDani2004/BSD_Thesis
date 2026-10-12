@@ -81,27 +81,35 @@ def main():
     for i, v in enumerate(['V1_code', 'V2_pure']):
         for j, dg in enumerate(['diffusive', 'jump']):
             ax = axes[i, j]
+            ends = []
             for m, col in M_COL.items():
                 pts = sorted([(int(r['n_rebalance']), float(r['breach_rate'])) for r in gb
                               if r['dgp'] == dg and r['variant'] == v and r['peak'] == 'peak_step'
                               and r['model'] == 'bounded' and float(r['m']) == m])
                 ax.plot([p[0] for p in pts], [p[1] for p in pts], color=col, marker='o', markersize=6,
                         markeredgecolor=SURFACE, label=f'm = {m:g}')
-                ax.annotate(f'm = {m:g}', (pts[-1][0], pts[-1][1]), xytext=(4, 0), textcoords='offset points',
-                            fontsize=7, color=INK2, va='center')
+                ends.append((pts[-1][1], m))
+            placed = []
+            for y, m in sorted(ends, reverse=True):      # direct labels only where they do not collide
+                if all(abs(y - q) > 0.05 for q in placed):
+                    ax.annotate(f'm = {m:g}', (50, y), xytext=(5, 0), textcoords='offset points',
+                                fontsize=7, color=INK2, va='center')
+                    placed.append(y)
             ax.set_xscale('log')
             ax.set_xticks([1, 2, 5, 10, 50])
             ax.set_xticklabels(['1', '2', '5', '10', '50'])
+            ax.set_xlim(0.8, 80)
             ax.set_ylim(0, 1)
             ax.set_title(f'{v}, {dg} DGP', color=INK, fontsize=10, loc='left')
             if i == 1:
                 ax.set_xlabel('rebalances per step n (peak tracked at step ends)')
             if j == 0:
                 ax.set_ylabel('share of paths breaching the 20% floor')
-    axes[0, 0].legend(frameon=False, fontsize=8, labelcolor=INK2)
+    h, lab = axes[0, 0].get_legend_handles_labels()
+    fig.legend(h, lab, frameon=False, fontsize=8, labelcolor=INK2, ncol=4, loc='upper right')
     fig.suptitle(f'CPPI floor-breach rate, bounded returns; {PHASE} seeds, NOT YET REPLICATED',
                  fontsize=10, color=INK, x=0.01, ha='left')
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0, 1, 0.96))
     fig.savefig(os.path.join(RES, 'fig_gap.png'), dpi=150)
     plt.close(fig)
 

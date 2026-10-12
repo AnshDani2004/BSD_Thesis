@@ -1,0 +1,33 @@
+  a: A_ii=0.95 shock=small D=5 done
+  a: A_ii=0.95 shock=small D=20 done
+  a: A_ii=0.95 shock=small D=125 done
+  a: A_ii=0.95 shock=thesis D=5 done
+  a: A_ii=0.95 shock=thesis D=20 done
+  a: A_ii=0.95 shock=thesis D=125 done
+  a: A_ii=0.95 shock=large D=5 done
+  a: A_ii=0.95 shock=large D=20 done
+  a: A_ii=0.95 shock=large D=125 done
+  a: A_ii=0.97 shock=small D=5 done
+  a: A_ii=0.97 shock=small D=20 done
+  a: A_ii=0.97 shock=small D=125 done
+  a: A_ii=0.97 shock=thesis D=5 done
+  a: A_ii=0.97 shock=thesis D=20 done
+  a: A_ii=0.97 shock=thesis D=125 done
+  a: A_ii=0.97 shock=large D=5 done
+  a: A_ii=0.97 shock=large D=20 done
+  a: A_ii=0.97 shock=large D=125 done
+  a: A_ii=0.99 shock=small D=5 done
+  a: A_ii=0.99 shock=small D=20 done
+  a: A_ii=0.99 shock=small D=125 done
+  a: A_ii=0.99 shock=thesis D=5 done
+  a: A_ii=0.99 shock=thesis D=20 done
+  a: A_ii=0.99 shock=thesis D=125 done
+  a: A_ii=0.99 shock=large D=5 done
+  a: A_ii=0.99 shock=large D=20 done
+  a: A_ii=0.99 shock=large D=125 done
+  b: diffusive done
+  b: jump done
+  b: placebo done
+  c: done
+done in 1181.9 s
+EXIT 0
