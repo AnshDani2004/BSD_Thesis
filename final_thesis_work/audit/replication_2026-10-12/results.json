@@ -1,0 +1,102 @@
+{
+  "info": {
+    "python": "3.10.13",
+    "numpy": "2.2.6",
+    "returns_sha256": "4987c90a3840b4c685a330db35431a883a832c3bd27f47fdcdc4784ba298e9c8",
+    "returns_min": -9.931593592966,
+    "n_bear_returns_below_-1/0.6": 93,
+    "n_bear_returns_below_-1/3": 3104
+  },
+  "runs": [
+    {
+      "base": "oracle_bull",
+      "wealth_updates": true,
+      "ruin_rate": 0.01,
+      "n_ruined": 1,
+      "median_terminal_wealth": 26.383555105279704,
+      "mean_terminal_wealth": 95.22160953701241,
+      "n_paths_mdd_gt_20pct": 100,
+      "median_mdd": 0.22478262724995507,
+      "worst_mdd": 1.0,
+      "lambda_min": 0.0,
+      "lambda_max": 0.6000000000000001,
+      "f_min": 0.0,
+      "f_max": 0.6000000000000001
+    },
+    {
+      "base": "oracle_bull",
+      "wealth_updates": false,
+      "ruin_rate": 0.59,
+      "n_ruined": 59,
+      "median_terminal_wealth": 0.0,
+      "mean_terminal_wealth": 0.10176262871308955,
+      "n_paths_mdd_gt_20pct": 100,
+      "median_mdd": 1.0,
+      "worst_mdd": 1.0,
+      "lambda_min": 0.5999999999999999,
+      "lambda_max": 0.5999999999999999,
+      "f_min": 0.5999999999999999,
+      "f_max": 0.5999999999999999
+    },
+    {
+      "base": "half",
+      "wealth_updates": true,
+      "ruin_rate": 0.01,
+      "n_ruined": 1,
+      "median_terminal_wealth": 10.173115697456609,
+      "mean_terminal_wealth": 13.300520696597367,
+      "n_paths_mdd_gt_20pct": 100,
+      "median_mdd": 0.204943297577319,
+      "worst_mdd": 1.0,
+      "lambda_min": 0.0,
+      "lambda_max": 0.6000000000000001,
+      "f_min": 0.0,
+      "f_max": 0.30000000000000004
+    },
+    {
+      "base": "half",
+      "wealth_updates": false,
+      "ruin_rate": 0.13,
+      "n_ruined": 13,
+      "median_terminal_wealth": 0.05318145087664092,
+      "mean_terminal_wealth": 0.5086415834930978,
+      "n_paths_mdd_gt_20pct": 100,
+      "median_mdd": 0.9975321230125809,
+      "worst_mdd": 1.0,
+      "lambda_min": 0.5999999999999999,
+      "lambda_max": 0.5999999999999999,
+      "f_min": 0.29999999999999993,
+      "f_max": 0.29999999999999993
+    },
+    {
+      "base": "beta",
+      "wealth_updates": true,
+      "ruin_rate": 0.01,
+      "n_ruined": 1,
+      "median_terminal_wealth": 5.048343141104868,
+      "mean_terminal_wealth": 9.028247596849544,
+      "n_paths_mdd_gt_20pct": 75,
+      "median_mdd": 0.20091261056159582,
+      "worst_mdd": 1.0,
+      "lambda_min": 0.0,
+      "lambda_max": 0.6000000000000001,
+      "f_min": 0.0,
+      "f_max": 0.5249999999999998
+    },
+    {
+      "base": "beta",
+      "wealth_updates": false,
+      "ruin_rate": 0.02,
+      "n_ruined": 2,
+      "median_terminal_wealth": 1.0276151257012225,
+      "mean_terminal_wealth": 1.934933335188643,
+      "n_paths_mdd_gt_20pct": 100,
+      "median_mdd": 0.8577116507477243,
+      "worst_mdd": 1.0,
+      "lambda_min": 0.5999999999999999,
+      "lambda_max": 0.5999999999999999,
+      "f_min": 0.0,
+      "f_max": 0.5249999999999999
+    }
+  ]
+}
