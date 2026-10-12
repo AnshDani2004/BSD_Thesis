@@ -318,10 +318,14 @@ class ThompsonKellyAgent(BaseAgent):
         odds: Optional[List[float]] = None,
         prior_alpha: float = 1.0,
         prior_beta: float = 1.0,
-        fraction_cap: float = 1.0
+        fraction_cap: float = 1.0,
+        rng: Optional[np.random.Generator] = None
     ):
         """
         Initialize ThompsonKellyAgent.
+
+        rng (added 2026-10-12, ext2): explicit np.random.Generator for the posterior
+        draws. None keeps the original behaviour (unseeded global NumPy RNG).
         
         Args:
             n_arms: Number of arms K
@@ -334,6 +338,7 @@ class ThompsonKellyAgent(BaseAgent):
         self.prior_alpha = prior_alpha
         self.prior_beta = prior_beta
         self.fraction_cap = fraction_cap
+        self.rng = rng
         
         # Initialize posteriors
         self.alphas = np.full(n_arms, prior_alpha)
@@ -352,7 +357,8 @@ class ThompsonKellyAgent(BaseAgent):
         3. Return: normalized f*
         """
         # Step 1: Sample from Beta posteriors
-        p_samples = np.random.beta(self.alphas, self.betas)
+        beta_draw = self.rng.beta if self.rng is not None else np.random.beta
+        p_samples = beta_draw(self.alphas, self.betas)
         self.last_samples = p_samples.copy()
         
         # Step 2: Compute Kelly fractions for sampled probabilities
@@ -938,10 +944,12 @@ class EpsilonGreedyKelly(BaseAgent):
         n_arms: int,
         odds: Optional[List[float]] = None,
         epsilon: float = 0.1,
-        fraction_cap: float = 1.0
+        fraction_cap: float = 1.0,
+        rng: Optional[np.random.Generator] = None
     ):
         super().__init__(n_arms, odds)
         self.epsilon = epsilon
+        self.rng = rng  # ext2: explicit Generator; None = global NumPy RNG (original)
         self.fraction_cap = fraction_cap
         
         self.pulls = np.zeros(n_arms)
@@ -950,7 +958,8 @@ class EpsilonGreedyKelly(BaseAgent):
     def act(self, observation: Optional[np.ndarray] = None) -> np.ndarray:
         p_hat = np.where(self.pulls == 0, 1.0, self.wins / np.maximum(self.pulls, 1))
         
-        if np.random.random() < self.epsilon:
+        u = self.rng.random() if self.rng is not None else np.random.random()
+        if u < self.epsilon:
             # Explore: uniform positive expectation
             p_target = np.ones(self.n_arms) * np.max(p_hat)
         else:
