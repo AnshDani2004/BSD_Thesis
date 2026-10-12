@@ -115,7 +115,17 @@ floating-point precision (checked by `tests/test_fidelity.py`).
 Each step is split into K = 50 equal sub-intervals (fine grid). With n in {1, 2, 5, 10, 50}, the agent
 rebalances at fine indices 0, K/n, 2K/n, ... of each step. At a rebalance it recomputes lambda from its
 current W and P (sections 3 and 4) using the f_base fixed at the start of the step; between rebalances the
-position is held (buy and hold): W_end = W_start (1 + f (exp(sum of fine log increments) - 1)). After each
-rebalance interval the agent receives its wealth and sets P := max(P, W). The Beta posterior is updated
-once per step, at the step end, on the sign of the step's total simple return. With n = 1 this is
-exactly section 5.
+position is held (buy and hold): W_end = W_start (1 + f (exp(sum of fine log increments) - 1)), computed in
+log space as in section 6. The Beta posterior is updated once per step, at the step end, on the sign of the
+step's total log return (the same sign as its simple return).
+
+Peak tracking (PREREG amendment 2):
+
+* `peak_step` (primary): the agent receives its wealth after every rebalance interval (so W is current
+  at each rebalance) but updates its peak P := max(P, W) only at step ends. The floor is then tracked on
+  the same grid for every n, and n changes only how often the exposure is reset.
+* `peak_every` (secondary; the version first written in this spec): P := max(P, W) after every rebalance
+  interval. With n > 1 the agent then also sees intra-step highs, so its floor sits higher, which by
+  itself lowers step-grid breaches.
+
+With n = 1 the two are identical and equal sections 5 to 7.

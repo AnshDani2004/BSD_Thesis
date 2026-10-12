@@ -148,12 +148,15 @@ return), censored at horizon H = min(D, 50): a path with no alarm in [125, 125 +
 as "never detected". Reported per cell: mean and median of the censored delay, its 90th percentile, share
 never detected, and the realised false-alarm rate on the same paths.
 
-Downstream sizing (Kelly under the CPPI floor wired in): base fraction b_t = 0 if the alarm was on at
+Downstream sizing (Kelly under the CPPI floor wired in; amendment 1 adds the unbounded comparison): base fraction b_t = 0 if the alarm was on at
 t - 1, else 1 (b_0 = 1; the Gaussian bull Kelly fraction 0.08 / 0.15^2 = 3.56 clipped to 1, and the bear
 fraction clipped to 0). Bet f_t = lambda_t b_t with lambda_t the thesis CPPI multiplier of CPPI_SPEC.md
 section 3 (m = 3, floor 80% of the running peak, lambda in [0.01, 0.50]); one rebalance per step; wealth
 W_{t+1} = W_t (1 + f_t r_t) with r_t = exp(x_t) - 1. Benchmarks on the same paths: "always in" (b_t = 1)
-and "oracle" (b_t = 0 exactly for t in [125, 125 + D)). Secondary: "no floor" (f_t = 0.5 b_t).
+and "oracle timing" (b_t = 0 exactly for t in [125, 125 + D)). Secondary: "no floor" (f_t = 0.5 b_t), and
+(amendment 1) the same alarms and bets applied to the unbounded model's simple returns r_t = x_t (thesis
+comparison; the detectors see the same x either way, so only the wealth changes). Context (amendment 3):
+`bear_log_growth.py` computes E[log(1 + f r)] for constant bets in each regime by quadrature.
 
 ## 6. Outcomes and tests
 
@@ -179,12 +182,15 @@ section 8; Wilson 95% CI).
 
 Agent variants (CPPI_SPEC.md sections 10 and 11): V1_code (the thesis agent, lambda in [0.01, 0.50]) and
 V2_pure (lambda in [0, 0.50]). Grid: n rebalances per step in {1, 2, 5, 10, 50}; m in {1, 2, 3, 5}.
+Peak tracking (amendment 2): primary `peak_step` (peak updated at step ends only, exposure rebalanced n
+times); secondary `peak_every` (peak updated at every rebalance). Diagnostic (amendment 2): for each
+breaching path, whether lambda sat at its minimum (or the cushion was <= 0) in the first breaching step.
 Breach (primary outcome): wealth on the step-end grid falls more than 20% below its running peak
 (CPPI_SPEC.md section 8). Secondary: breach on the fine grid (all 50 substeps per step, against the
 fine-grid running peak), median terminal wealth, maximum drawdown. Comparison: V1_code at n = 1 for each m
 on the unbounded model (r = x) with the same stream-2 draws.
 
-Test, per (DGP, variant): grouped binomial logistic regression of breach on log(n) and m over the 20
+Test, per (DGP, variant, peak tracking): grouped binomial logistic regression of breach on log(n) and m over the 20
 (n, m) cells on common paths, logit P = b0 + b1 log n + b2 m (Newton-Raphson, ridge 1e-8). CIs and
 one-sided p-values from a path bootstrap (2,000 resamples of the 2,000 paths, each path's 20 cells kept
 together): p(b1 < 0) = (1 + #{boot b1 >= 0}) / 2001, p(b2 > 0) = (1 + #{boot b2 <= 0}) / 2001.
@@ -192,7 +198,7 @@ together): p(b1 < 0) = (1 + #{boot b1 >= 0}) / 2001, p(b2 > 0) = (1 + #{boot b2 
 The pre-registered gap-risk prediction: if the remaining breaches are gap risk, breach falls toward zero
 as n grows and as m falls (with one rebalance per interval, a breach needs a one-interval loss larger than
 1/m of the exposure; for V2_pure with m <= 1 and r > -1 a step-grid breach is impossible, a theorem used as
-a check). Decision rule per variant, under the diffusive DGP:
+a check). Decision rule per variant, under the diffusive DGP with `peak_step` tracking:
 
 * SUPPORTED if b1 < 0 and b2 > 0, both with Holm-adjusted p < 0.05 (within the primary family below), and
   the breach rate at n = 50 is at most 10% of the rate at n = 1 for m = 3 ("toward zero").
@@ -200,7 +206,9 @@ a check). Decision rule per variant, under the diffusive DGP:
 * NOT SUPPORTED otherwise.
 
 Under the jump DGP the prediction is reversed for n (the shock arrives inside one interval whatever n is),
-so the jump runs are a negative control: b1 near zero is expected; reported, not tested for support.
+so the jump runs are a negative control: with `peak_step` tracking, b1 near zero is expected (95% CI
+covering 0 or |b1| < 0.1); reported, not tested for support. The `peak_every` regressions are reported
+as secondary.
 
 ### 6c. Thesis agents (outcome c)
 
@@ -211,8 +219,8 @@ bounded returns thesis ruin is exactly 0 for every agent; any nonzero value is a
 
 ## 7. Multiple testing
 
-Primary family (Holm, alpha 0.05, 8 tests): A1 to A4 (two-sided) and, under the diffusive DGP, b1 < 0 and
-b2 > 0 for V1_code and V2_pure (one-sided). Secondary contrasts (A1 to A5 at all other cells, jump-DGP
+Primary family (Holm, alpha 0.05, 8 tests): A1 to A4 (two-sided) and, under the diffusive DGP with
+`peak_step` tracking, b1 < 0 and b2 > 0 for V1_code and V2_pure (one-sided). Secondary contrasts (A1 to A5 at all other cells, jump-DGP
 slopes): Benjamini-Hochberg, reported as q-values. Everything else is descriptive.
 
 ## 8. Kill criteria
@@ -241,7 +249,7 @@ for the CPPI; (iii) realised confirmatory false-alarm rates versus the targets.
 
 `results/exploratory/` and `results/confirmatory/`: `a_frontier.csv`, `a_downstream.csv`,
 `a_contrasts.csv`, `b_gap.csv`, `b_regression.json`, `c_agents.csv`, `primary.json`, `thresholds.json`
-(exploratory only), `run_info.json` (git hash, versions, seeds, runtime). Figures: `fig_frontier.png`
+(exploratory only), `run_info.json` (git hash, versions, seeds, runtime); `results/bear_log_growth.json`. Figures: `fig_frontier.png`
 (delay vs realised false-alarm rate, one panel per A_ii, thesis shock D = 125), `fig_frontier_shocks.png`
 (one panel per shock cell at A_ii = 0.95), `fig_gap.png`.
 
@@ -249,4 +257,7 @@ for the CPPI; (iii) realised confirmatory false-alarm rates versus the targets.
 
 | # | date | change | reason | seen data? |
 |---|---|---|---|---|
-| 0 | 2026-10-12 | version 1 | | no outcome data |
+| 0 | 2026-10-12 | version 1 (commit a5ebfc0) | | no outcome data |
+| 1 | 2026-10-12 | Outcome a downstream: add the same alarms and bets on the unbounded model (r = x) as a labelled comparison. | Exploratory run: under the bounded model "always in" had the highest median terminal wealth (120.9) and the oracle-timing benchmark did not beat it (119.0), so detection has almost no wealth value there; the comparison shows whether that is a property of the bounded model. | yes, exploratory seeds 0 to 999 |
+| 2 | 2026-10-12 | Outcome b: primary breach analysis uses `peak_step` tracking (peak updated at step ends only; exposure rebalanced n times); the originally specified `peak_every` version becomes secondary. Add the lambda-at-minimum breach diagnostic. | Exploratory run: with `peak_every`, the jump-DGP negative control still showed a strong n effect (b1 = -0.42, V1 breach at m = 3 from 0.624 at n = 1 to 0.234 at n = 50) because the agent sees intra-step highs and raises its floor. A quick exploratory diagnostic with `peak_step` gave V1 0.624 to 0.586 (diffusive) and V2 0.088 to 0.007 (diffusive), 0.088 to 0.085 (jump). So `peak_every` mixes "rebalance exposure more often" with "track a higher floor"; only `peak_step` isolates the first, which is what the gap-risk prediction is about. Under version 1 the V1 decision was SUPPORTED on exploratory seeds; this change is expected to make it less favourable. | yes, exploratory seeds 0 to 999 |
+| 3 | 2026-10-12 | Add `bear_log_growth.py` (deterministic quadrature of E[log(1 + f r)] per regime) as context. | Exploratory finding: under the bounded log-Student-t model every regime has positive expected log growth for small enough bets (E[exp(x)] is infinite for Student-t x), e.g. the thesis bear has Kelly fraction 0.072 in [0, 1] with growth +0.0022 per step, so "go to cash in the bear" is never Kelly-optimal under the bounded model. | analytic, no seeds |
