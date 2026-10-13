@@ -38,6 +38,26 @@ Reading: at matched false alarms the volatility feature makes detection slightly
 (A1 > 0), the CUSUM also slows it (A2 > 0), and BOCPD and the jump model are much slower than the
 thesis Vol-HMM + CUSUM. Secondary A5 (bocpd_mean - volhmm_cusum) = +1.645 [1.416, 1.899].
 
+### (a') Thesis-native threshold h = 0 (no tuning), A_ii = 0.95, thesis shock, D = 125, confirmatory
+
+FA definition: share of pre-break steps t in [10, 125) with s_t > 0 (each flagged step counts), per
+1,000 such steps, pooled over the 2,000 paths. Alarm onsets (s_t > 0 and s_{t-1} <= 0) reported
+separately. Delay as above (first t >= 125 with s_t > 0, minus 125, censored at 50). For the HMMs
+s_t > 0 is P(bear) > 0.5; for BOCPD and jm, h = 0 is simply the same cut applied to their scores
+(P(l <= 10) > 0.5 for bocpd_rl; posterior segment mean < 0 for bocpd_mean; bear cheaper for jm).
+
+| detector | FA steps per 1,000 | onsets per 1,000 | mean delay | median delay | never detected |
+|---|---|---|---|---|---|
+| hmm_ret | 26.41 | 13.69 | 1.540 | 1 | 0 |
+| volhmm | 2.14 | 1.28 | 2.655 | 2 | 0 |
+| volhmm_cusum | 41.88 | 10.06 | 1.659 | 1 | 0 |
+| bocpd_rl | 90.70 | 36.08 | 1.464 | 1 | 0 |
+| bocpd_mean | 43.88 | 24.36 | 2.329 | 1 | 0 |
+| jm | 513.84 | 83.92 | 1.245 | 0 | 0 |
+
+Alternative readings: volhmm_cusum with +2 from the next step 38.57 FA, 1.738 delay; jm with the
+0.05 step-0 vol feature 513.15 FA, 1.246 delay. Stored under `native_threshold_h0` in `replica.json`.
+
 ## (b) Gap risk, confirmatory, step-grid breach rate (diffusive DGP, peak_step, primary)
 
 | variant | n | m=1 | m=2 | m=3 | m=5 |

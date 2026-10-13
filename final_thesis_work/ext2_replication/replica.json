@@ -2360,5 +2360,74 @@
    "ci_covers_0": false,
    "abs_b1_lt_0.1": true
   }
+ },
+ "native_threshold_h0": {
+  "definition": "FA = share of pre-break steps t in [10,125) with s_t > 0, per 1,000, pooled over 2,000 confirmatory paths (alarm onsets reported separately); delay = first t>=125 with s_t>0 minus 125, censored at 50; A_ii 0.95, thesis shock, D 125",
+  "values": {
+   "hmm_ret": {
+    "h": 0.0,
+    "fa_steps_per_1000": 26.40869565217391,
+    "onsets_per_1000": 13.691304347826087,
+    "mean_delay": 1.5405,
+    "median_delay": 1.0,
+    "share_never": 0.0
+   },
+   "volhmm": {
+    "h": 0.0,
+    "fa_steps_per_1000": 2.1434782608695655,
+    "onsets_per_1000": 1.2826086956521738,
+    "mean_delay": 2.6545,
+    "median_delay": 2.0,
+    "share_never": 0.0
+   },
+   "volhmm_cusum": {
+    "h": 0.0,
+    "fa_steps_per_1000": 41.87826086956522,
+    "onsets_per_1000": 10.060869565217391,
+    "mean_delay": 1.6585,
+    "median_delay": 1.0,
+    "share_never": 0.0
+   },
+   "volhmm_cusum_lag1": {
+    "h": 0.0,
+    "fa_steps_per_1000": 38.56521739130435,
+    "onsets_per_1000": 9.443478260869565,
+    "mean_delay": 1.738,
+    "median_delay": 1.0,
+    "share_never": 0.0
+   },
+   "bocpd_rl": {
+    "h": 0.0,
+    "fa_steps_per_1000": 90.69565217391303,
+    "onsets_per_1000": 36.07826086956522,
+    "mean_delay": 1.4645,
+    "median_delay": 1.0,
+    "share_never": 0.0
+   },
+   "bocpd_mean": {
+    "h": 0.0,
+    "fa_steps_per_1000": 43.87826086956522,
+    "onsets_per_1000": 24.360869565217392,
+    "mean_delay": 2.3295,
+    "median_delay": 1.0,
+    "share_never": 0.0
+   },
+   "jm": {
+    "h": 0.0,
+    "fa_steps_per_1000": 513.8391304347825,
+    "onsets_per_1000": 83.92173913043479,
+    "mean_delay": 1.245,
+    "median_delay": 0.0,
+    "share_never": 0.0
+   },
+   "jm_volhmm_v": {
+    "h": 0.0,
+    "fa_steps_per_1000": 513.1478260869566,
+    "onsets_per_1000": 84.81739130434784,
+    "mean_delay": 1.2455,
+    "median_delay": 0.0,
+    "share_never": 0.0
+   }
+  }
  }
 }
