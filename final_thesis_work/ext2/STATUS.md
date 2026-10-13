@@ -68,3 +68,9 @@ reproduce the run, move that file aside first. `NUMBA_CACHE_DIR` keeps numba fro
   branch, unpushed)?]
 * [NEEDS ANSH: nothing here goes on the resume or website until it is replicated. Which, if any, of the
   three headline candidates in RESULTS.md section 6 would you want considered afterwards?]
+
+## Ansh's decisions (2026-10-13)
+Bounded log-return model primary; amendment 2 recorded as a disclosed deviation with both versions
+reported; CPPI agent described as coded in the README. Push of `ext2-ablation` (which includes the
+`audit-cppi-floor` commits) only after Ansh approves the README.
+

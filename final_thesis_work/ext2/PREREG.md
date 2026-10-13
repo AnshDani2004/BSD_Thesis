@@ -264,3 +264,14 @@ for the CPPI; (iii) realised confirmatory false-alarm rates versus the targets.
 | 3 | 2026-10-12 | Add `bear_log_growth.py` (deterministic quadrature of E[log(1 + f r)] per regime) as context. | Exploratory finding: under the bounded log-Student-t model every regime has positive expected log growth for small enough bets (E[exp(x)] is infinite for Student-t x), e.g. the thesis bear has Kelly fraction 0.072 in [0, 1] with growth +0.0022 per step, so "go to cash in the bear" is never Kelly-optimal under the bounded model. | analytic, no seeds |
 | 4 | 2026-10-12 | The lambda-at-minimum diagnostic records the interval in which wealth first ended below 80% of the step-grid peak (not any interval of the breaching step). | Exploratory run 2 showed V2_pure (minimum 0) flagged "at minimum" on all n = 50 breaches, an artifact of intervals after the crossing (cushion already <= 0). Diagnostic only; breach outcomes unchanged. | yes, exploratory seeds 0 to 999 |
 | 5 | 2026-10-12 | FREEZE. Thresholds in `results/exploratory/thresholds.json` (tuned on exploratory seeds 0 to 999, identical in exploratory runs 1 and 2) are final. Confirmatory run on seeds 100000 to 101999, once. | | |
+
+## Decisions and disclosed deviation (Ansh, 2026-10-13)
+
+- The bounded log-return model is the primary model (as specified); the original simple-return model is
+  reported as a comparison only.
+- DISCLOSED DEVIATION: amendment 2 (primary gap-risk analysis switched from `peak_every` to `peak_step`)
+  was made after looking at the exploratory results, before the freeze. Both versions are reported
+  (RESULTS.md section 2.2 and the repository README): `peak_step` V1 0.607 vs 0.5625 (PARTLY SUPPORTED);
+  `peak_every` V1 0.607 vs 0.037 (would have been SUPPORTED; its jump control also falls, 0.607 vs 0.2105).
+- The CPPI agent is described as coded (CPPI_SPEC.md); the README corrects the thesis text accordingly.
+
