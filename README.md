@@ -45,8 +45,10 @@ precision.
 
 ## Limitations
 
-- **Simulation only.** Every result comes from synthetic paths. The S&P 500 epochs
-  (`data/historical/`) are single paths, and the historical table in the thesis has no saved output here.
+- **Simulation only.** Every result comes from synthetic paths. The S&P 500 epochs are single paths,
+  and the historical table in the thesis has no saved output here. Their return arrays are not stored in
+  this repository: `python3 scripts/fetch_historical_data.py` (from `final_thesis_work/`, needs yfinance)
+  downloads them and checks each against `data/historical/checksums.json`.
 - **One stylised break.** A Gaussian bull regime followed by a Student-t(3) bear regime halfway
   through each path. Per-step moves are far larger than daily equity returns, and the two regimes are
   very different, which makes the break easy to detect.
@@ -81,7 +83,7 @@ final_thesis_work/
   simulation/      Vol-HMM, CPPI agent, baseline agents, environments, wealth tracker
   experiments/     experiment scripts (exp01 to exp07) and generate_all_figures.py
   audit/           audit_checks.py and its outputs (added 2026-10-12)
-  data/historical/ cached S&P 500 return arrays for four epochs
+  data/historical/ checksums of the S&P 500 return arrays (fetch with scripts/fetch_historical_data.py)
   dashboard/       React/Vite frontend and Flask backend
   thesis/          LaTeX source and compiled main.pdf
   presentation/    Beamer slides for the defense

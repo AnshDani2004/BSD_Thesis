@@ -1,0 +1,26 @@
+{
+ "real_2000_dotcom": {
+  "n": 709,
+  "dtype": "float64",
+  "sha256_float64_le": "99faaf01890fadf73a1df1d578734270234ea8138fed4553601048dcb3844c4e",
+  "file_sha256": "37e0b98c0cbcc8edbb81d5ef64b8e1ce8c9d27c3dfa08408abe2170159aa1fd5"
+ },
+ "real_2008_crisis": {
+  "n": 523,
+  "dtype": "float64",
+  "sha256_float64_le": "b71c886b01a0946d3ca2f2df65676ca9fcdcc735faf5a481a904a9b3f0f71699",
+  "file_sha256": "baa96b5b6aab78056f577e2416d7240061e51c324a045992d4888043625ed36b"
+ },
+ "real_2013_bull": {
+  "n": 1760,
+  "dtype": "float64",
+  "sha256_float64_le": "07a7c07f81c02c8f4cb2b13082cfa1bde2b974536ef3baff9aa362a417093c78",
+  "file_sha256": "7f5b3e35758725f15cd95ec8b491fcfcb424fa7dfda1f660a86a712c7ebcb773"
+ },
+ "real_2020_covid": {
+  "n": 251,
+  "dtype": "float64",
+  "sha256_float64_le": "6f4e903936e0f4a5cda6b070030f7fa91995e069d83f1647868b9edc1f0be486",
+  "file_sha256": "156b0fe8179e35eeae1feb0c2ec74d06d32d75e731450ca406ac271f1b10c545"
+ }
+}
