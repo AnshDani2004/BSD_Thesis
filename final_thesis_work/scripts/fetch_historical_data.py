@@ -2,8 +2,18 @@
 fetch_historical_data.py
 Downloads S&P 500 logarithmic daily returns for 4 historical epochs and caches
 them as NumPy .npy files in the data/ directory for use by the Flask API.
+
+The arrays are not stored in the repository (the data come from Yahoo Finance via yfinance).
+After downloading, each array is checked against data/historical/checksums.json (element count and
+SHA-256 of the float64 values) recorded from the arrays used for the thesis dashboard. Yahoo can revise
+its history, so a mismatch is reported (exit code 2) rather than silently accepted.
+
+    python3 scripts/fetch_historical_data.py [--out-dir DIR]
 """
 
+import argparse
+import hashlib
+import json
 import os
 import sys
 import numpy as np
@@ -17,7 +27,7 @@ except ImportError:
     sys.exit(1)
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'historical')
-os.makedirs(DATA_DIR, exist_ok=True)
+CHECKSUMS = os.path.join(DATA_DIR, 'checksums.json')
 
 # Define the historical scenarios with their exact date windows
 HISTORICAL_SCENARIOS = {
@@ -68,18 +78,42 @@ def fetch_and_save(key, config):
     # Compute log-returns (the standard tool for our WealthTracker)
     log_returns = np.diff(np.log(prices))
 
-    out_path = os.path.join(DATA_DIR, f"{key}.npy")
+    out_path = os.path.join(OUT_DIR, f"{key}.npy")
     np.save(out_path, log_returns)
     print(f"  ✅ Saved {len(log_returns)} daily log-returns → {out_path}")
     return True
 
+def verify(key):
+    """Compare a saved array with checksums.json. Returns True if it matches."""
+    expected = json.load(open(CHECKSUMS)).get(key)
+    if expected is None:
+        print(f"  {key}: no recorded checksum")
+        return False
+    a = np.load(os.path.join(OUT_DIR, f"{key}.npy"))
+    got = hashlib.sha256(np.ascontiguousarray(a, dtype="<f8").tobytes()).hexdigest()
+    ok = a.size == expected["n"] and got == expected["sha256_float64_le"]
+    print(f"  {key}: {'OK' if ok else 'MISMATCH'} (n={a.size}, expected {expected['n']})")
+    return ok
+
+
 if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out-dir", default=DATA_DIR)
+    OUT_DIR = ap.parse_args().out_dir
+    os.makedirs(OUT_DIR, exist_ok=True)
     print("\n=== Fetching Historical S&P 500 Data ===\n")
     success_count = 0
+    fetched = []
     for key, config in HISTORICAL_SCENARIOS.items():
         ok = fetch_and_save(key, config)
         if ok:
             success_count += 1
+            fetched.append(key)
 
     print(f"\n✅ Done. {success_count}/{len(HISTORICAL_SCENARIOS)} scenarios cached successfully.")
-    print(f"   Data directory: {DATA_DIR}")
+    print(f"   Data directory: {OUT_DIR}")
+    print("\n=== Checking against data/historical/checksums.json ===\n")
+    matches = [verify(k) for k in fetched]
+    if success_count < len(HISTORICAL_SCENARIOS) or not all(matches):
+        print("\nWARNING: the downloaded data differ from the arrays the dashboard results were computed on.")
+        sys.exit(2)

@@ -1,0 +1,4 @@
+
+# S&P 500 return arrays from Yahoo Finance: not stored here.
+# Run final_thesis_work/scripts/fetch_historical_data.py (checks data/historical/checksums.json).
+final_thesis_work/data/historical/*.npy
