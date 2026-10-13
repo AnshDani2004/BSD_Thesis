@@ -1,0 +1,14 @@
+diffusive|V1_code|peak_step 9.89631700515747
+diffusive|V1_code|peak_every 17.28550624847412
+diffusive|V2_pure|peak_step 28.90764307975769
+diffusive|V2_pure|peak_every 42.839967012405396
+jump|V1_code|peak_step 64.66135311126709
+jump|V1_code|peak_every 90.48309993743896
+jump|V2_pure|peak_step 112.13857007026672
+jump|V2_pure|peak_every 130.43744206428528
+placebo|V1_code|peak_step 161.87470388412476
+placebo|V1_code|peak_every 183.90461015701294
+placebo|V2_pure|peak_step 203.36297297477722
+placebo|V2_pure|peak_every 216.6067352294922
+done 216.61191606521606
+python3 rep_b.py b_out.json  191.61s user 4.41s system 90% cpu 3:36.85 total

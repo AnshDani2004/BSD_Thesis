@@ -1,8 +1,51 @@
 # RESULTS: Extension 2 (detector ablation, CPPI gap risk, bounded returns)
 
-EVERY NUMBER IN THIS FILE IS NOT YET REPLICATED. An independent replication (from `PREREG.md` and
-`CPPI_SPEC.md` only) and an adversarial review have not been run. Do not quote any number anywhere
-until they have.
+## Review outcome (2026-10-13): replicated; adversarial review corrects four statements
+
+Replication (`../ext2_replication/REPLICATION.md`, from PREREG.md and CPPI_SPEC.md only, own tuning on the
+exploratory seeds): every primary-cell mean delay and all four primary contrasts reproduce (+0.144, +0.232,
++3.483, +8.071 steps; Holm 0.0008), the gap-risk rates, slopes and decisions reproduce (V1 0.607 -> 0.5625,
+b1 -0.0435; V2 0.0835 -> 0.0015, b1 -0.708), and the CPPI agent's bounded-model wealth reproduces (Adversarial
+median 8.10). The other five thesis agents could not be replicated from the documents (not specified there).
+One ambiguity matters: the jump model's volatility feature at step 0 (the other reading gives A4 +6.21
+instead of +8.07; sign unchanged).
+
+Adversarial review (`../ext2_adversarial/REPORT.md`): numbers reproduce exactly and runs are bit-identical,
+but these statements in this file are WRONG or OVERREACH and are superseded by the wording below:
+- Section 0 item 4 and section 4 item 2 (downstream null "because of the bounded model"): contradicted by
+  this run's own a_downstream.csv. Without the floor, detection is worth 8 to 9 times always-in's wealth
+  under the same bounded model (always in 15.0 vs 120.7 to 137.6 for the HMMs); with the floor wired in the
+  null also holds under the unbounded model. The null comes from the CPPI floor, which de-levers like a
+  stop-loss. The jump model is below always-in (28.8 vs 29.1), not "slightly ahead".
+- Section 1.2 "ordering is the same in all three A_ii panels": false at A_ii 0.99 (Vol-HMM 2.33 faster than
+  return-only 2.38; significant A1 cells at 0.99: 15 faster, 5 slower). "Volatility makes detection slower"
+  holds at the thesis persistence 0.95 only; 87% of paths tie.
+- The size of A2 depends on which false-alarm rate is matched (the thesis CUSUM latches before the break on
+  66% of paths): at matched per-path false-alarm probability A2 is +0.040 [-0.025, 0.104] at 0.95.
+- A3 and A4 come mostly from censored paths and a priori settings: BOCPD tuned on exploratory seeds gives a
+  mean delay of 2.80 (A3 +0.27 instead of +3.48); the tuned jump model 5.09 instead of 10.59 (both on the
+  grid edge). The ranking holds.
+- The CPPI result is stronger stated causally: on the same paths, setting the minimum leverage to 0 removes
+  86.2% of the thesis agent's breaches (99.7% at 50 rebalances per step); most breaches overshoot the 20%
+  floor by under 1 percentage point (median max drawdown among breachers 0.204; 10.2% of paths exceed 21%).
+- The bounded bear's positive small-bet growth comes from extreme right-tail steps (truncating the t3 at
+  |z| <= 5 makes growth negative): fine for the detection frontier, not for economic claims about the bear.
+
+Wording the results support (replicated where stated above):
+1. At the thesis persistence (A_ii = 0.95) and matched false-alarm rates, neither the volatility feature nor
+   the thesis's latching CUSUM sped detection: the return-only HMM was 0.14 steps faster than the Vol-HMM,
+   with 87% of paths tied; at A_ii = 0.99 the difference vanished or reversed. The volatility feature's
+   clear benefit was fewer false alarms at the thesis threshold (2.1 vs 26.4 per 1,000).
+2. BOCPD and the jump model at a priori settings were slower, mostly through missed breaks; tuned, BOCPD
+   came within 0.3 steps of the Vol-HMM + CUSUM.
+3. Removing the CPPI agent's 0.01 minimum leverage removed 86% of its floor breaches (99.7% at 50
+   rebalances per step); most breaches overshoot the floor by under 1 percentage point.
+4. With the floor wired in, detection added no median wealth for a persistent shock under either return
+   model, because the floor already de-levers; without the floor, detection was worth 8 to 9 times the
+   wealth of staying invested.
+5. Under bounded returns, thesis-definition ruin is zero by construction.
+
+The sections below are the original write-up, kept unchanged for the record.
 
 Synthetic data only. Confirmatory run: seeds 100000 to 101999 (2,000 paths per cell), run once from the
 FREEZE commit a8bd9ff on branch `ext2-ablation`, outputs committed in 5a50295. Paths below are relative

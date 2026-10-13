@@ -1,0 +1,110 @@
+{
+ "Stationary|bounded|CPPI": {
+  "thesis_ruin": 0.0,
+  "thesis_ruin_wilson": [
+   1.0842021724855044e-19,
+   0.001917047281252934
+  ],
+  "practical_ruin": 0.0,
+  "median_terminal": 77.48851005409199,
+  "median_terminal_ci": [
+   73.04963837322512,
+   81.08000425603694
+  ],
+  "floor_breach": 0.0,
+  "floor_breach_wilson": [
+   1.0842021724855044e-19,
+   0.001917047281252934
+  ]
+ },
+ "Stationary|unbounded|CPPI": {
+  "thesis_ruin": 0.0,
+  "thesis_ruin_wilson": [
+   1.0842021724855044e-19,
+   0.001917047281252934
+  ],
+  "practical_ruin": 0.0,
+  "median_terminal": 36.72194851018962,
+  "median_terminal_ci": [
+   34.98671333694791,
+   38.81641650151508
+  ],
+  "floor_breach": 0.0,
+  "floor_breach_wilson": [
+   1.0842021724855044e-19,
+   0.001917047281252934
+  ]
+ },
+ "Adversarial|bounded|CPPI": {
+  "thesis_ruin": 0.0,
+  "thesis_ruin_wilson": [
+   1.0842021724855044e-19,
+   0.001917047281252934
+  ],
+  "practical_ruin": 0.0,
+  "median_terminal": 8.099829002872845,
+  "median_terminal_ci": [
+   7.696725000800165,
+   8.497176079942415
+  ],
+  "floor_breach": 0.6155,
+  "floor_breach_wilson": [
+   0.5939774787981503,
+   0.6365796832798803
+  ]
+ },
+ "Adversarial|unbounded|CPPI": {
+  "thesis_ruin": 0.001,
+  "thesis_ruin_wilson": [
+   0.0002742789176520342,
+   0.003638934269038394
+  ],
+  "practical_ruin": 0.001,
+  "median_terminal": 4.61201691029961,
+  "median_terminal_ci": [
+   4.493034572172196,
+   4.770626046615011
+  ],
+  "floor_breach": 0.971,
+  "floor_breach_wilson": [
+   0.9626945430771895,
+   0.97749959838387
+  ]
+ },
+ "Drift|bounded|CPPI": {
+  "thesis_ruin": 0.0,
+  "thesis_ruin_wilson": [
+   1.0842021724855044e-19,
+   0.001917047281252934
+  ],
+  "practical_ruin": 0.0,
+  "median_terminal": 2.8251833065730962,
+  "median_terminal_ci": [
+   2.7304163240141976,
+   2.911075118061704
+  ],
+  "floor_breach": 0.0005,
+  "floor_breach_wilson": [
+   8.826773070546787e-05,
+   0.0028268625032662133
+  ]
+ },
+ "Drift|unbounded|CPPI": {
+  "thesis_ruin": 0.0,
+  "thesis_ruin_wilson": [
+   1.0842021724855044e-19,
+   0.001917047281252934
+  ],
+  "practical_ruin": 0.0,
+  "median_terminal": 2.0550189706978967,
+  "median_terminal_ci": [
+   2.009546145084275,
+   2.113048562858398
+  ],
+  "floor_breach": 0.0015,
+  "floor_breach_wilson": [
+   0.0005102635836384819,
+   0.004401032555770693
+  ]
+ }
+}

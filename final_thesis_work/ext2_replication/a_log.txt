@@ -1,0 +1,4 @@
+expl scores 8.050981044769287
+conf scores 23.501447916030884
+done 24.40897297859192
+python3 rep_a.py a_out.json  24.25s user 0.26s system 99% cpu 24.690 total

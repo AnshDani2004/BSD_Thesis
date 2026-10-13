@@ -1,0 +1,167 @@
+{
+ "b_lmin_dose": {
+  "n1_lmin0.0": {
+   "breach": 0.0835,
+   "breach_mdd_gt_0p21": 0.0215,
+   "breach_mdd_gt_0p25": 0.0015,
+   "median_mdd_breachers": 0.20185830306010777,
+   "p90_mdd_breachers": 0.222849200824478,
+   "median_terminal": 8.144204454876498
+  },
+  "n1_lmin0.001": {
+   "breach": 0.365,
+   "breach_mdd_gt_0p21": 0.0235,
+   "breach_mdd_gt_0p25": 0.0015,
+   "median_mdd_breachers": 0.20047039845792236,
+   "p90_mdd_breachers": 0.20377919620907609,
+   "median_terminal": 8.174419918314683
+  },
+  "n1_lmin0.005": {
+   "breach": 0.522,
+   "breach_mdd_gt_0p21": 0.033,
+   "breach_mdd_gt_0p25": 0.0025,
+   "median_mdd_breachers": 0.2021719792118078,
+   "p90_mdd_breachers": 0.20717246686598115,
+   "median_terminal": 8.22415773919772
+  },
+  "n1_lmin0.01": {
+   "breach": 0.607,
+   "breach_mdd_gt_0p21": 0.102,
+   "breach_mdd_gt_0p25": 0.0035,
+   "median_mdd_breachers": 0.20420665639926988,
+   "p90_mdd_breachers": 0.21333012044808716,
+   "median_terminal": 8.26807988322507
+  },
+  "n1_lmin0.02": {
+   "breach": 0.6945,
+   "breach_mdd_gt_0p21": 0.3085,
+   "breach_mdd_gt_0p25": 0.009,
+   "median_mdd_breachers": 0.20875016022362103,
+   "p90_mdd_breachers": 0.22497385998129166,
+   "median_terminal": 8.280267281569088
+  },
+  "n50_lmin0.0": {
+   "breach": 0.0015,
+   "breach_mdd_gt_0p21": 0.0005,
+   "breach_mdd_gt_0p25": 0.0,
+   "median_mdd_breachers": 0.2000141017790531,
+   "p90_mdd_breachers": 0.21268084175649865,
+   "median_terminal": 7.739087324361387
+  },
+  "n50_lmin0.001": {
+   "breach": 0.3355,
+   "breach_mdd_gt_0p21": 0.0,
+   "breach_mdd_gt_0p25": 0.0,
+   "median_mdd_breachers": 0.20033254184236227,
+   "p90_mdd_breachers": 0.20096300111410337,
+   "median_terminal": 7.759809648521912
+  },
+  "n50_lmin0.005": {
+   "breach": 0.488,
+   "breach_mdd_gt_0p21": 0.0035,
+   "breach_mdd_gt_0p25": 0.0,
+   "median_mdd_breachers": 0.20173898026911496,
+   "p90_mdd_breachers": 0.20516473387998418,
+   "median_terminal": 7.78286542688757
+  },
+  "n50_lmin0.01": {
+   "breach": 0.5625,
+   "breach_mdd_gt_0p21": 0.0625,
+   "breach_mdd_gt_0p25": 0.0,
+   "median_mdd_breachers": 0.2035870634973992,
+   "p90_mdd_breachers": 0.21035628608851337,
+   "median_terminal": 7.792972711978444
+  },
+  "n50_lmin0.02": {
+   "breach": 0.6465,
+   "breach_mdd_gt_0p21": 0.2345,
+   "breach_mdd_gt_0p25": 0.001,
+   "median_mdd_breachers": 0.20741482199960726,
+   "p90_mdd_breachers": 0.2209989105371569,
+   "median_terminal": 7.853971267956011
+  }
+ },
+ "overlap_n1": {
+  "v1": 1214,
+  "v2": 167,
+  "v2_and_v1": 167,
+  "v2_not_v1": 0,
+  "share_v1_breaches_removed_by_lmin0": 0.8624382207578254
+ },
+ "overlap_n50": {
+  "v1": 1125,
+  "v2": 3,
+  "v2_and_v1": 3,
+  "v2_not_v1": 0,
+  "share_v1_breaches_removed_by_lmin0": 0.9973333333333333
+ },
+ "V1_peak_every_n1": {
+  "breach_step": 0.607,
+  "breach_fine": 0.9685
+ },
+ "V1_peak_step_n1": {
+  "breach_step": 0.607,
+  "breach_fine": 0.9685
+ },
+ "V1_peak_every_n50": {
+  "breach_step": 0.037,
+  "breach_fine": 0.6475
+ },
+ "V1_peak_step_n50": {
+  "breach_step": 0.5625,
+  "breach_fine": 0.943
+ },
+ "bear_growth": {
+  "per_f": {
+   "0.01": {
+    "full": 0.0011075506839770496,
+    "contrib_x_gt": {
+     "1.0": 0.001573644552243621,
+     "2.0": 0.0011624874844986762,
+     "3.0": 0.0009661557611283523
+    },
+    "truncated_z5": -0.0001843067292975174
+   },
+   "0.05": {
+    "full": 0.002137383292021589,
+    "contrib_x_gt": {
+     "1.0": 0.0046098823922244535,
+     "2.0": 0.002674043343779223,
+     "3.0": 0.001848935292793435
+    },
+    "truncated_z5": -0.0011060567713780593
+   },
+   "0.072": {
+    "full": 0.0022457682743520814,
+    "contrib_x_gt": {
+     "1.0": 0.005917593112939144,
+     "2.0": 0.0032131734806368356,
+     "3.0": 0.0021133120075301675
+    },
+    "truncated_z5": -0.0017344591964705688
+   },
+   "0.1": {
+    "full": 0.002097277994183985,
+    "contrib_x_gt": {
+     "1.0": 0.007392766353514211,
+     "2.0": 0.0037702439341813733,
+     "3.0": 0.0023684616923152226
+    },
+    "truncated_z5": -0.0026541018198637063
+   },
+   "0.5": {
+    "full": -0.020433157894180078,
+    "contrib_x_gt": {
+     "1.0": 0.01999592634900832,
+     "2.0": 0.0073749874586820485,
+     "3.0": 0.0037746122167247095
+    },
+    "truncated_z5": -0.02908559330961578
+   }
+  },
+  "kelly": 0.0720283542345974,
+  "kelly_growth": 0.002245768439713457,
+  "P_x_gt_1": 0.017540757357740955,
+  "P_x_gt_2": 0.0029931278488535473
+ }
+}
