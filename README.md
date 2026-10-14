@@ -31,8 +31,8 @@ reviewed, and its numbers are quoted with their conditions.
 
 ## Extension 2 (2026-10-13): a pre-registered ablation, synthetic data only
 
-Code, specification and results: `final_thesis_work/ext2/` (`PREREG.md` frozen at a8bd9ff,
-`CPPI_SPEC.md`, `RESULTS.md`; confirmatory run 5a50295), the independent replication in
+Code, specification and results: `final_thesis_work/ext2/` (`PREREG.md` frozen at 55498a2,
+`CPPI_SPEC.md`, `RESULTS.md`, `COMMIT_MAP.md`; confirmatory run 043d02f), the independent replication in
 `final_thesis_work/ext2_replication/` (written from `PREREG.md` and `CPPI_SPEC.md` only) and the
 adversarial review in `final_thesis_work/ext2_adversarial/REPORT.md`. Every random generator is seeded;
 2,000 paths per cell (confirmatory seeds 100000 to 101999), with every threshold tuned on separate
